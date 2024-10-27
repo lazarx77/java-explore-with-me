@@ -23,7 +23,7 @@
 	</properties>
 
 	<modules>
-<!--		<module>gateway</module>-->
+		<module>main-svc</module>
 		<module>stats-svc</module>
 	</modules>
 

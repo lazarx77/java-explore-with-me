@@ -58,7 +58,8 @@ public class StatsServerController {
      */
     @GetMapping(path = "/stats")
     @ResponseStatus(HttpStatus.OK)
-    public List<StatsResponseDto> getStats(@RequestParam @DateTimeFormat(pattern = DATE_TIME_FORMAT) LocalDateTime start,
+    public List<StatsResponseDto> getStats(@RequestParam @DateTimeFormat(pattern = DATE_TIME_FORMAT)
+                                           LocalDateTime start,
                                            @RequestParam @DateTimeFormat(pattern = DATE_TIME_FORMAT) LocalDateTime end,
                                            @RequestParam(required = false) String[] uris,
                                            @RequestParam(defaultValue = "false") Boolean unique) {

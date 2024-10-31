@@ -42,7 +42,7 @@ class ErrorHandlerTest {
         // Подготовка данных для теста
         MethodArgumentTypeMismatchException exception = mock(MethodArgumentTypeMismatchException.class);
         when(exception.getName()).thenReturn("paramName");
-        when(exception.getRequiredType()).thenReturn((Class) String.class); // Приведение к Class
+        when(exception.getRequiredType()).thenReturn((Class) String.class);
 
         // Вызов метода обработчика
         ErrorResponse response = errorHandler.handleTypeMismatchException(exception);
@@ -52,19 +52,17 @@ class ErrorHandlerTest {
         assertEquals("Ошибка преобразования параметра.", response.getMessage());
         assertEquals("Пожалуйста, проверьте формат передаваемых данных.", response.getReason());
         assertEquals(1, response.getErrors().size());
-        assertEquals("Неверный формат параметра: paramName. Ожидался тип: String", response.getErrors().getFirst());
+        assertEquals("Неверный формат параметра: paramName. Ожидался тип: String",
+                response.getErrors().getFirst());
     }
 
 
     @Test
     void handleIllegalArgumentException() {
-        // Подготовка данных для теста
         IllegalArgumentException exception = new IllegalArgumentException("Некорректные данные");
 
-        // Вызов метода обработчика
         ErrorResponse response = errorHandler.handleIllegalArgumentException(exception);
 
-        // Проверка результатов
         assertEquals("400 BAD_REQUEST", response.getStatus());
         assertEquals("Ошибка валидации данных.", response.getMessage());
         assertEquals("Некорректные данные, предоставленные в запросе.", response.getReason());
@@ -74,13 +72,10 @@ class ErrorHandlerTest {
 
     @Test
     void handleThrowable() {
-        // Подготовка данных для теста
         Throwable exception = new Throwable("Внутренняя ошибка сервера");
 
-        // Вызов метода обработчика
         ErrorResponse response = errorHandler.handleThrowable(exception);
 
-        // Проверка результатов
         assertEquals("500 INTERNAL_SERVER_ERROR", response.getStatus());
         assertEquals("Возникла ошибка INTERNAL_SERVER_ERROR.", response.getMessage());
         assertEquals("Для запрашиваемой операции условия не выполнены.", response.getReason());

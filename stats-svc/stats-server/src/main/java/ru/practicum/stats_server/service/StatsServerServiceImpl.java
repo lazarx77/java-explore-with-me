@@ -60,6 +60,7 @@ public class StatsServerServiceImpl implements StatsServerService {
         } else if (!urisList.isEmpty()) {
             stats = statsRepository.findUniqueIpStatsSummaryBetween(start, end, urisList);
         }
+        stats.sort((s1, s2) -> Long.compare(s2.getHits(), s1.getHits()));
         return stats;
     }
 }

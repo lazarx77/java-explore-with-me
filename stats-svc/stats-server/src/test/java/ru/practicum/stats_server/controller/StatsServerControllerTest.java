@@ -32,7 +32,8 @@ class StatsServerControllerTest {
 
     @Test
     void addStats_whenInvoked_thenStatsRequestDtoReturned() {
-        StatsRequestDto statsRequestDto = new StatsRequestDto("192.168.0.1", "/api/test", "TestApp", LocalDateTime.now());
+        StatsRequestDto statsRequestDto = new StatsRequestDto("192.168.0.1", "/api/test", "TestApp",
+                LocalDateTime.now());
 
         Stats stats = new Stats();
         stats.setIp(statsRequestDto.getIp());
@@ -60,7 +61,8 @@ class StatsServerControllerTest {
 
         StatsResponseDto statsResponseDto = new StatsResponseDto("192.168.0.1", "/api/test", 10L);
         List<StatsResponseDto> expectedStatsResponseDtos = List.of(statsResponseDto);
-        when(statsServerService.getStats(any(LocalDateTime.class), any(LocalDateTime.class), any(String[].class), any(Boolean.class)))
+        when(statsServerService.getStats(any(LocalDateTime.class), any(LocalDateTime.class), any(String[].class),
+                any(Boolean.class)))
                 .thenReturn(expectedStatsResponseDtos);
 
         List<StatsResponseDto> actualStatsResponseDtos = statsServerController.getStats(start, end, uris, unique);

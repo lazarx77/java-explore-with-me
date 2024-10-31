@@ -58,7 +58,8 @@ public class StatsRepositoryIT {
 
         assertThat(statsSummary).hasSize(2);
         assertThat(statsSummary).extracting(StatsResponseDto::getApp).containsOnly("TestApp");
-        assertThat(statsSummary).extracting(StatsResponseDto::getUri).containsExactlyInAnyOrder("/test/uri1", "/test/uri2");
+        assertThat(statsSummary).extracting(StatsResponseDto::getUri).containsExactlyInAnyOrder("/test/uri1",
+                "/test/uri2");
         assertThat(statsSummary).extracting(StatsResponseDto::getHits).containsExactly(2L, 1L);
     }
 
@@ -70,7 +71,8 @@ public class StatsRepositoryIT {
 
         assertThat(uniqueIpStatsSummary).hasSize(2);
         assertThat(uniqueIpStatsSummary).extracting(StatsResponseDto::getApp).containsOnly("TestApp");
-        assertThat(uniqueIpStatsSummary).extracting(StatsResponseDto::getUri).containsExactlyInAnyOrder("/test/uri1", "/test/uri2");
+        assertThat(uniqueIpStatsSummary).extracting(StatsResponseDto::getUri)
+                .containsExactlyInAnyOrder("/test/uri1", "/test/uri2");
         assertThat(uniqueIpStatsSummary).extracting(StatsResponseDto::getHits).containsExactly(2L, 1L);
     }
 
@@ -78,7 +80,8 @@ public class StatsRepositoryIT {
     public void whenFindStatsSummaryBetweenWithUris_thenReturnFilteredStatsSummary() {
         LocalDateTime start = LocalDateTime.now().minusDays(2);
         LocalDateTime end = LocalDateTime.now();
-        List<StatsResponseDto> statsSummary = statsRepository.findStatsSummaryBetween(start, end, Arrays.asList("/test/uri1"));
+        List<StatsResponseDto> statsSummary = statsRepository.findStatsSummaryBetween(start, end,
+                List.of("/test/uri1"));
 
         assertThat(statsSummary).hasSize(1);
         assertThat(statsSummary).extracting(StatsResponseDto::getUri).containsExactly("/test/uri1");

@@ -29,7 +29,8 @@ class ErrorResponseTest {
     @Test
     void testErrorResponseGetters() {
         List<String> errorList = Arrays.asList("Error 1");
-        ErrorResponse errorResponse = new ErrorResponse(errorList, "Some message", "Some reason", "404 NOT FOUND", "2023-10-01T12:00:00Z");
+        ErrorResponse errorResponse = new ErrorResponse(errorList, "Some message", "Some reason",
+                "404 NOT FOUND", "2023-10-01T12:00:00Z");
 
         assertEquals(errorList, errorResponse.getErrors());
         assertEquals("Some message", errorResponse.getMessage());

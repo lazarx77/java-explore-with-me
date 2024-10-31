@@ -11,11 +11,8 @@ import java.util.Map;
 
 /**
  * Базовый клиент для взаимодействия с REST API.
- * <p>
- * Этот класс предоставляет методы для выполнения HTTP-запросов (GET, POST, PUT, PATCH, DELETE)
- * к удаленному серверу с использованием {@link RestTemplate}. Он автоматически добавляет
- * необходимые заголовки и обрабатывает ответы от сервера.
- * </p>
+ * Предоставляет методы для выполнения HTTP-запросов (GET, POST)
+ * с использованием {@link RestTemplate}.
  */
 public class BaseClient {
     protected final RestTemplate restTemplate;

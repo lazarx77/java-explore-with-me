@@ -32,7 +32,7 @@ public class Event {
     private Category category;
     @Column(name = "confirmed_requests")
     private Long confirmedRequests;
-    @Column
+    @Column(name = "created_on", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMAT)
     private LocalDateTime createdOn;
@@ -59,7 +59,7 @@ public class Event {
     private Boolean paid;
     @Column(name = "participant_limit", nullable = false)
     private int participantLimit;
-    @Column(name = "published_on", nullable = false)
+    @Column(name = "published_on")
     private LocalDateTime publishedOn;
     @Column(name = "request_moderation", nullable = false)
     private Boolean requestModeration;

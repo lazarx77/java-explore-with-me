@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public CategoryDto createNewCategory(NewCategoryDto dto) {

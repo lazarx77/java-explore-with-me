@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS events (
     lon FLOAT NOT NULL,
     paid BOOLEAN NOT NULL,
     participant_limit INT NOT NULL,
-    published_on TIMESTAMP NOT NULL,
+    published_on TIMESTAMP,
     request_moderation BOOLEAN NOT NULL,
     state VARCHAR(50) NOT NULL,
     title VARCHAR(120) NOT NULL,
@@ -35,6 +35,6 @@ CREATE TABLE IF NOT EXISTS events (
     CONSTRAINT chk_annotation_length CHECK (LENGTH(annotation) BETWEEN 20 AND 2000),
     CONSTRAINT chk_description_length CHECK (LENGTH(description) BETWEEN 20 AND 7000),
     CONSTRAINT chk_title_length CHECK (LENGTH(title) BETWEEN 3 AND 120),
-    CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES category(id),
+    CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES categories(id),
     CONSTRAINT fk_initiator FOREIGN KEY (initiator_id) REFERENCES users(id)
 );

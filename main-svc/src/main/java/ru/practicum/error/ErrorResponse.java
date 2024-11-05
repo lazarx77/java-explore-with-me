@@ -1,13 +1,14 @@
-package ru.practicum.stats_server.error;
+package ru.practicum.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.practicum.stats_server.service.DateTimeUtil.DATE_TIME_FORMAT;
+import static ru.practicum.util.DateTimeUtil.DATE_TIME_FORMAT;
 
 /**
  * Ответ об ошибке, возвращаемый клиенту.
@@ -16,6 +17,7 @@ import static ru.practicum.stats_server.service.DateTimeUtil.DATE_TIME_FORMAT;
 @RequiredArgsConstructor
 public class ErrorResponse {
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private final List<String> errors;
     private final String message;
     private final String reason;

@@ -40,7 +40,7 @@ public class ErrorHandler {
                 "Ошибка валидации данных.",
                 "Некорректные данные, предоставленные в запросе.",
                 HttpStatus.BAD_REQUEST.toString(),
-                LocalDateTime.now().toString()
+                LocalDateTime.now()
         );
     }
 
@@ -62,7 +62,7 @@ public class ErrorHandler {
                 "Ошибка преобразования параметра.",
                 "Пожалуйста, проверьте формат передаваемых данных.",
                 HttpStatus.BAD_REQUEST.toString(),
-                LocalDateTime.now().toString()
+                LocalDateTime.now()
         );
     }
 
@@ -82,7 +82,7 @@ public class ErrorHandler {
                 "Ошибка валидации данных.",
                 "Некорректные данные, предоставленные в запросе.",
                 HttpStatus.BAD_REQUEST.toString(),
-                LocalDateTime.now().toString()
+                LocalDateTime.now()
         );
     }
 
@@ -102,7 +102,7 @@ public class ErrorHandler {
                 "Возникла ошибка INTERNAL_SERVER_ERROR.",
                 "Для запрашиваемой операции условия не выполнены.",
                 HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-                LocalDateTime.now().toString()
+                LocalDateTime.now()
         );
     }
 }

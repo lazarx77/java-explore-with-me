@@ -7,8 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.aspectj.lang.annotation.After;
-import ru.practicum.event.annotations.AfterDuration;
 import ru.practicum.event.model.Location;
 
 import java.time.LocalDateTime;
@@ -29,7 +27,6 @@ public class NewEventDto {
     private String description;
     @NotNull(message = "Поле eventDate не может быть пустым")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMAT)
-    @AfterDuration("PT2H")
     private LocalDateTime eventDate;
     @Embedded
     private Location location;

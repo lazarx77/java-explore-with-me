@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import ru.practicum.exception.CategoryNameDoubleException;
-import ru.practicum.exception.EmailDoubleException;
-import ru.practicum.exception.NotFoundException;
+import ru.practicum.exception.*;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -54,6 +52,63 @@ public class ErrorHandler {
         );
     }
 
+
+    @ExceptionHandler(EventDateTimeException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleEventDateTimeException(final EventDateTimeException e) {
+        log.error("Возникла ошибка CONFLICT EventDateTimeException: {}.", e.getMessage());
+
+        return new ErrorResponse(
+                getStackTrace(e),
+                e.getMessage(),
+                "Событие не удовлетворяет правилам редактирования.",
+                HttpStatus.CONFLICT.getReasonPhrase().toUpperCase(),
+                LocalDateTime.now()
+        );
+    }
+
+    @ExceptionHandler(LocationConstraintsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleLocationConstraintsException(final LocationConstraintsException e) {
+        log.error("Возникла ошибка CONFLICT LocationConstraintsException: {}.", e.getMessage());
+
+        return new ErrorResponse(
+                getStackTrace(e),
+                e.getMessage(),
+                "Событие не удовлетворяет правилам редактирования.",
+                HttpStatus.CONFLICT.getReasonPhrase().toUpperCase(),
+                LocalDateTime.now()
+        );
+    }
+
+    @ExceptionHandler(StatePublishedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleStatePublishedException(final StatePublishedException e) {
+        log.error("Возникла ошибка CONFLICT StatePublishedException: {}.", e.getMessage());
+
+        return new ErrorResponse(
+                getStackTrace(e),
+                e.getMessage(),
+                "Событие не удовлетворяет правилам редактирования.",
+                HttpStatus.CONFLICT.getReasonPhrase().toUpperCase(),
+                LocalDateTime.now()
+        );
+    }
+
+    @ExceptionHandler(StringSizeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleEventStringSizeException(final StringSizeException e) {
+        log.error("Возникла ошибка BAD_REQUEST EventDateTimeException: {}.", e.getMessage());
+
+        return new ErrorResponse(
+                getStackTrace(e),
+                e.getMessage(),
+                "Событие не удовлетворяет правилам редактирования.",
+                HttpStatus.BAD_REQUEST.getReasonPhrase().toUpperCase(),
+                LocalDateTime.now()
+        );
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleConstraintViolationException(ConstraintViolationException e) {
@@ -76,7 +131,6 @@ public class ErrorHandler {
                 LocalDateTime.now()
         );
     }
-
 
     /**
      * Обрабатывает исключения несоответствия типов аргументов.

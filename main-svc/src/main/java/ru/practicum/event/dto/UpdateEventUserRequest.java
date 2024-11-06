@@ -1,11 +1,10 @@
 package ru.practicum.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
+import jakarta.persistence.Embedded;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.category.dto.CategoryDto;
-import ru.practicum.user.dto.UserShortDto;
+import ru.practicum.event.model.Location;
 
 import java.time.LocalDateTime;
 
@@ -13,17 +12,18 @@ import static ru.practicum.util.DateTimeUtil.DATE_TIME_FORMAT;
 
 @Getter
 @Setter
-@Builder
-public class EventShortDto {
+public class UpdateEventUserRequest {
 
     private String annotation;
-    private CategoryDto category;
-    private Long confirmedRequests;
+    private Long category;
+    private String description;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMAT)
     private LocalDateTime eventDate;
-    private Long id;
-    private UserShortDto initiator;
-    private boolean paid;
+    @Embedded
+    private Location location;
+    private Boolean paid;
+    private Integer participantLimit;
+    private Boolean requestModeration;
+    private String stateAction;
     private String title;
-    private Long views;
 }

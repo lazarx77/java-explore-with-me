@@ -4,17 +4,27 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.category.dto.CategoryDto;
 import ru.practicum.category.dto.NewCategoryDto;
 import ru.practicum.category.service.CategoryService;
+import ru.practicum.event.dto.EventFullDto;
+import ru.practicum.event.dto.UpdateEventAdminRequest;
+import ru.practicum.event.service.EventService;
 import ru.practicum.user.dto.NewUserRequestDto;
 import ru.practicum.user.dto.UserDto;
 import ru.practicum.user.service.UserService;
+import ru.practicum.validator.DateTimeValidator;
+import ru.practicum.validator.LocationValidator;
+import ru.practicum.validator.StringSizeValidator;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static ru.practicum.util.DateTimeUtil.DATE_TIME_FORMAT;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -26,6 +36,7 @@ public class AdminController {
 
     private final UserService userService;
     private final CategoryService categoryService;
+    private final EventService eventService;
 
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
@@ -71,5 +82,45 @@ public class AdminController {
         log.info("Вызывается метод deleteCategory в AdminController");
         categoryService.deleteCategory(catId);
     }
+
+    @PatchMapping("/events/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
+    public EventFullDto updateEventByAdmin(@PathVariable
+                                           @Positive(message = "id события должен быть положительным") Long eventId,
+                                           @RequestBody UpdateEventAdminRequest dto) {
+        log.info("Вызывается метод updateEvent в AdminController");
+        if (dto.getDescription() != null) {
+            StringSizeValidator.validateDescription(dto.getDescription());
+        }
+        if (dto.getEventDate() != null) {
+            DateTimeValidator.ValidateDatetime(dto.getEventDate());
+        }
+        if (dto.getAnnotation() != null) {
+            StringSizeValidator.validateAnnotation(dto.getAnnotation());
+        }
+        if (dto.getTitle() != null) {
+            StringSizeValidator.validateTitle(dto.getTitle());
+        }
+        if (dto.getLocation() != null) {
+            LocationValidator.validateLocation(dto.getLocation());
+        }
+        return eventService.updateEventByAdmin(eventId, dto);
+    }
+
+    @GetMapping("/events")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EventFullDto> getEventsByAdmin(@RequestParam(required = false) Long[] users,
+                                               @RequestParam(required = false) String[] states,
+                                               @RequestParam(required = false) Long[] categories,
+                                               @RequestParam(required = false)
+                                               @DateTimeFormat(pattern = DATE_TIME_FORMAT) LocalDateTime rangeStart,
+                                               @RequestParam(required = false)
+                                               @DateTimeFormat(pattern = DATE_TIME_FORMAT) LocalDateTime rangeEnd,
+                                               @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                               @RequestParam(defaultValue = "10") @Positive int size) {
+        log.info("Вызывается метод getEventsByAdmin в AdminController");
+        return eventService.getEventsByAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
+    }
+
 
 }

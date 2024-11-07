@@ -1,5 +1,6 @@
 package ru.practicum.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
@@ -8,9 +9,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.annotation.RequestScope;
 import ru.practicum.category.dto.CategoryDto;
 import ru.practicum.category.dto.NewCategoryDto;
 import ru.practicum.category.service.CategoryService;
+import ru.practicum.compilation.dto.NewCompilationDto;
+import ru.practicum.compilation.model.Compilation;
+import ru.practicum.compilation.service.CompilationService;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.UpdateEventAdminRequest;
 import ru.practicum.event.service.EventService;
@@ -24,7 +29,7 @@ import ru.practicum.validator.StringSizeValidator;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.practicum.util.DateTimeUtil.DATE_TIME_FORMAT;
+import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -37,6 +42,7 @@ public class AdminController {
     private final UserService userService;
     private final CategoryService categoryService;
     private final EventService eventService;
+    private final CompilationService compilationService;
 
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
@@ -122,5 +128,13 @@ public class AdminController {
         return eventService.getEventsByAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 
-
+    @PostMapping("/admin/compilations")
+    @ResponseStatus(HttpStatus.OK)
+    public Compilation createCompilation(@RequestBody @Valid NewCompilationDto dto) {
+        log.info("Вызывается метод createCompilation в AdminController");
+        if (dto.getPinned() == null) {
+            dto.setPinned(false);
+        }
+        return compilationService.createCompilation(dto);
+    }
 }

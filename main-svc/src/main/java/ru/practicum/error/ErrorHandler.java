@@ -187,6 +187,20 @@ public class ErrorHandler {
         );
     }
 
+    @ExceptionHandler(RequestConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleRequestConflictException(final RequestConflictException e) {
+        log.error("Возникла ошибка CONFLICT RequestConflictException: {}.", e.getMessage());
+
+        return new ErrorResponse(
+                getStackTrace(e),
+                e.getMessage(),
+                "Нарушено ограничение целостности.",
+                HttpStatus.CONFLICT.getReasonPhrase().toUpperCase(),
+                LocalDateTime.now()
+        );
+    }
+
     @ExceptionHandler(CategoryNameDoubleException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleCategoryNameDoubleException(final CategoryNameDoubleException e) {

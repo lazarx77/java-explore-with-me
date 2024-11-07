@@ -1,12 +1,12 @@
-package ru.practicum.requests.model;
+package ru.practicum.request.model;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public enum Status {
     PENDING,
-    REJECTED,
-    CONFIRMED;
+    CONFIRMED,
+    REJECTED;
 
     public static Optional<Status> from(String stringStatus) {
         return Stream.of(values())

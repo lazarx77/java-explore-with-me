@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static ru.practicum.util.DateTimeUtil.formatter;
+import static ru.practicum.util.Utils.formatter;
 
 @AllArgsConstructor
 public class EventDtoMapper {

@@ -9,11 +9,10 @@ import ru.practicum.category.model.Category;
 import ru.practicum.event.model.Location;
 import ru.practicum.event.model.State;
 import ru.practicum.user.dto.UserShortDto;
-import ru.practicum.user.model.User;
 
 import java.time.LocalDateTime;
 
-import static ru.practicum.util.DateTimeUtil.DATE_TIME_FORMAT;
+import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
 @Getter
 @Setter

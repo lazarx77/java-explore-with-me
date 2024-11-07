@@ -13,4 +13,13 @@ public interface EventRepositoryCustom {
                           LocalDateTime rangeEnd,
                           int offset,
                           int limit);
+
+    List<Event> getEventsPublic(String text,
+                                List<Long> categoryIds,
+                                Boolean paid,
+                                LocalDateTime rangeStart,
+                                LocalDateTime rangeEnd,
+                                Boolean onlyAvailable,
+                                int from,
+                                int size);
 }

@@ -13,6 +13,10 @@ import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.NewEventDto;
 import ru.practicum.event.dto.UpdateEventUserRequest;
 import ru.practicum.event.service.EventService;
+import ru.practicum.request.dto.EventRequestStatusUpdateRequestDto;
+import ru.practicum.request.dto.EventRequestStatusUpdateResultDto;
+import ru.practicum.request.dto.ParticipationRequestDto;
+import ru.practicum.request.service.RequestService;
 import ru.practicum.validator.DateTimeValidator;
 import ru.practicum.validator.LocationValidator;
 import ru.practicum.validator.StringSizeValidator;
@@ -28,6 +32,7 @@ import java.util.List;
 public class PrivateController {
 
     private final EventService eventService;
+    private final RequestService requestService;
 
     @PostMapping("/users/{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
@@ -87,5 +92,67 @@ public class PrivateController {
         }
         return eventService.updateEventByUser(userId, eventId, dto);
     }
+
+    @PostMapping("/users/{userId}/requests")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ParticipationRequestDto addParticipationRequestToEvent(@PathVariable
+                                                                  @Positive(message = "id пользователя должен быть " +
+                                                                          "положительным") Long userId,
+                                                                  @RequestParam
+                                                                  @Positive(message = "id события должен быть " +
+                                                                          "положительным") Long eventId) {
+        log.info("Добавление запроса на участие в событии с id {} пользователя с id {}", eventId, userId);
+        return requestService.addParticipationRequestToEvent(userId, eventId);
+    }
+
+    @GetMapping("/users/{userId}/requests")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ParticipationRequestDto> getParticipationRequestsByUserId(@PathVariable
+                                                                          @Positive(message = "id пользователя " +
+                                                                                  "должен быть " +
+                                                                                  "положительным") Long userId) {
+        log.info("Получение запросов на участие в событиях пользователя с id {}", userId);
+        return requestService.getParticipationRequestsByUserId(userId);
+    }
+
+    @PatchMapping("/users/{userId}/requests/{reqId}/cancel")
+    @ResponseStatus(HttpStatus.OK)
+    public ParticipationRequestDto cancelParticipationRequestByUserId(@PathVariable
+                                                                      @Positive(message = "id пользователя должен " +
+                                                                              "быть положительным") Long userId,
+                                                                      @PathVariable
+                                                                      @Positive(message = "id запроса на учаетие " +
+                                                                              "должен быть положительным")
+                                                                      Long reqId) {
+        log.info("Отмена запроса на участие в событии пользователя с userId {} и reqId {}", userId, reqId);
+        return requestService.cancelParticipationRequest(userId, reqId);
+    }
+
+    @GetMapping("/users/{userId}/events/{eventId}/requests")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ParticipationRequestDto> getParticipationRequests(@PathVariable
+                                                                  @Positive(message = "id пользователя должен " +
+                                                                          "быть положительным") Long userId,
+                                                                  @PathVariable
+                                                                  @Positive(message = "id события должен " +
+                                                                          "быть положительным") Long eventId) {
+        log.info("Получение запросов на участие в событии с eventId {} пользователя с userId {}", eventId, userId);
+        return requestService.getParticipationRequestsByUserIdAndEventId(userId, eventId);
+    }
+
+    @PatchMapping("/users/{userId}/events/{eventId}/requests")
+    @ResponseStatus(HttpStatus.OK)
+    public EventRequestStatusUpdateResultDto updateRequestStatus(@PathVariable
+                                                                       @Positive(message = "id пользователя должен " +
+                                                                               "быть положительным") Long userId,
+                                                                       @PathVariable
+                                                                       @Positive(message = "id события должен " +
+                                                                               "быть положительным") Long eventId,
+                                                                       @RequestBody
+                                                                       @Valid EventRequestStatusUpdateRequestDto dto) {
+        log.info("Обновление статуса запроса на участие в событии с eventId {} и userId {}", eventId, userId);
+        return requestService.updateRequestStatus(userId, eventId, dto);
+    }
+
 
 }

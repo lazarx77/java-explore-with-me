@@ -1,5 +1,6 @@
 package ru.practicum.event.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,12 @@ import ru.practicum.validator.DateTimeValidator;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static ru.practicum.util.Utils.APP_NAME;
 
 @Service
 @AllArgsConstructor
@@ -208,5 +212,41 @@ public class EventServiceImpl implements EventService {
         return events.stream()
                 .map(event -> EventDtoMapper.toEventFullDto(event, statsClient))
                 .collect(Collectors.toList());
+    }
+
+    public EventFullDto getEventPublic(Long eventId) {
+        log.info("Получен запрос на получение события с eventId: {}", eventId);
+        Event event = eventRepository.findByIdAndState(eventId, State.PUBLISHED)
+                .orElseThrow(() -> new NotFoundException("Событие с таким eventId: " + eventId + " и статусом " +
+                        State.PUBLISHED + " не найдено."));
+        return EventDtoMapper.toEventFullDto(event, statsClient);
+    }
+
+    @Override
+    public List<EventShortDto> getEventsPublic(String text, Long[] categories, Boolean paid, LocalDateTime rangeStart,
+                                               LocalDateTime rangeEnd, Boolean onlyAvailable, String sortToUpperCase,
+                                               int from, int size, HttpServletRequest request) {
+
+        List<Long> categoryIds = (categories != null) ? Arrays.asList(categories) : null;
+
+        List<Event> events = eventRepository.getEventsPublic(text, categoryIds, paid, rangeStart, rangeEnd,
+                onlyAvailable, from, size);
+
+
+        List<EventShortDto> eventsDtoList = events.stream()
+                .map(event -> EventDtoMapper.toEventShortDto(event, statsClient))
+                .collect(Collectors.toList());
+
+        if (sortToUpperCase != null) {
+            if (sortToUpperCase.equals("EVENT_DATE")) {
+                eventsDtoList.sort(Comparator.comparing(EventShortDto::getEventDate));
+            } else if (sortToUpperCase.equals("VIEWS")) {
+                eventsDtoList.sort(Comparator.comparing(EventShortDto::getViews));
+            }
+        }
+        events.forEach(event -> {
+            statsClient.addStats(APP_NAME, request);
+        });
+        return eventsDtoList;
     }
 }

@@ -7,11 +7,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import ru.practicum.category.model.Category;
+import ru.practicum.compilation.model.Compilation;
 import ru.practicum.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import static ru.practicum.util.DateTimeUtil.DATE_TIME_FORMAT;
+import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
 @Entity
 @Getter
@@ -84,4 +86,12 @@ public class Event {
     @NotBlank(message = "Поле title не может быть пустым")
     @Size(min = 3, max = 120)
     private String title;
+
+    @ManyToMany
+    @JoinTable(
+            name = "compilation_events",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "compilation_id")
+    )
+    private List<Compilation> compilations;
 }

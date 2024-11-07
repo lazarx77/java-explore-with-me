@@ -9,7 +9,7 @@ import ru.practicum.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 
-import static ru.practicum.util.DateTimeUtil.DATE_TIME_FORMAT;
+import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
 @Getter
 @Setter

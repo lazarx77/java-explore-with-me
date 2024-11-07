@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.event.model.Event;
+import ru.practicum.event.model.State;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +15,6 @@ public interface EventRepository extends JpaRepository<Event, Long>, EventReposi
     List<Event> findAllByInitiatorId(@Param("userId") Long userId, @Param("offset") int offset, @Param("limit") int limit);
 
     Optional<Event> findByInitiatorIdAndId(Long userId, Long eventId);
+
+    Optional<Event> findByIdAndState(Long eventId, State state);
 }

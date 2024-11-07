@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.practicum.util.DateTimeUtil.DATE_TIME_FORMAT;
+import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
 /**
  * Ответ об ошибке, возвращаемый клиенту.

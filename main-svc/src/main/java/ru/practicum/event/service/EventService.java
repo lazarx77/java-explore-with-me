@@ -1,6 +1,5 @@
 package ru.practicum.event.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.event.dto.*;
 
@@ -30,5 +29,5 @@ public interface EventService {
 
     List<EventShortDto> getEventsPublic(String text, Long[] categories, Boolean paid, LocalDateTime rangeStart,
                                         LocalDateTime rangeEnd, Boolean onlyAvailable, String sortToUpperCase,
-                                        int from, int size, HttpServletRequest request);
+                                        int from, int size);
 }

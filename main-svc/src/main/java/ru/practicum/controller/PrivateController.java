@@ -27,14 +27,14 @@ import java.util.List;
 @Slf4j
 @CrossOrigin(origins = "*")
 @AllArgsConstructor
-@RequestMapping
+@RequestMapping("/users")
 @Validated
 public class PrivateController {
 
     private final EventService eventService;
     private final RequestService requestService;
 
-    @PostMapping("/users/{userId}/events")
+    @PostMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto addEvent(@PathVariable
                                  @Positive(message = "id пользователя должен быть положительным") Long userId,
@@ -44,7 +44,7 @@ public class PrivateController {
         return eventService.addNewEvent(userId, dto);
     }
 
-    @GetMapping("/users/{userId}/events")
+    @GetMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.OK)
     public List<EventShortDto> getEventsByUserId(@PathVariable @Positive(message = "id пользователя должен быть " +
             "положительным") Long userId,
@@ -54,7 +54,7 @@ public class PrivateController {
         return eventService.getEventsByUserId(userId, from, size);
     }
 
-    @GetMapping("/users/{userId}/events/{eventId}")
+    @GetMapping("/{userId}/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public EventFullDto getEventByUserIdAndEventId(@PathVariable @Positive(message = "id пользователя должен быть " +
             "положительным") Long userId,
@@ -64,7 +64,7 @@ public class PrivateController {
         return eventService.getEventByUserIdAndEventId(userId, eventId);
     }
 
-    @PatchMapping("/users/{userId}/events/{eventId}")
+    @PatchMapping("/{userId}/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public EventFullDto updateEventByUser(@PathVariable @Positive(message = "id пользователя должен быть " +
             "положительным") Long userId,
@@ -90,22 +90,26 @@ public class PrivateController {
         if (dto.getLocation() != null) {
             LocationValidator.validateLocation(dto.getLocation());
         }
+        if (dto.getParticipantLimit() != null && dto.getParticipantLimit() < 0) {
+            throw new IllegalArgumentException("Лимит участников не может быть меньше 0");
+        }
         return eventService.updateEventByUser(userId, eventId, dto);
     }
 
-    @PostMapping("/users/{userId}/requests")
+    @PostMapping("/{userId}/requests")
     @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto addParticipationRequestToEvent(@PathVariable
                                                                   @Positive(message = "id пользователя должен быть " +
                                                                           "положительным") Long userId,
                                                                   @RequestParam
                                                                   @Positive(message = "id события должен быть " +
-                                                                          "положительным") Long eventId) {
+                                                                          "положительным")
+                                                                  Long eventId) {
         log.info("Добавление запроса на участие в событии с id {} пользователя с id {}", eventId, userId);
         return requestService.addParticipationRequestToEvent(userId, eventId);
     }
 
-    @GetMapping("/users/{userId}/requests")
+    @GetMapping("/{userId}/requests")
     @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getParticipationRequestsByUserId(@PathVariable
                                                                           @Positive(message = "id пользователя " +
@@ -115,7 +119,7 @@ public class PrivateController {
         return requestService.getParticipationRequestsByUserId(userId);
     }
 
-    @PatchMapping("/users/{userId}/requests/{reqId}/cancel")
+    @PatchMapping("/{userId}/requests/{reqId}/cancel")
     @ResponseStatus(HttpStatus.OK)
     public ParticipationRequestDto cancelParticipationRequestByUserId(@PathVariable
                                                                       @Positive(message = "id пользователя должен " +
@@ -128,7 +132,7 @@ public class PrivateController {
         return requestService.cancelParticipationRequest(userId, reqId);
     }
 
-    @GetMapping("/users/{userId}/events/{eventId}/requests")
+    @GetMapping("/{userId}/events/{eventId}/requests")
     @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getParticipationRequests(@PathVariable
                                                                   @Positive(message = "id пользователя должен " +
@@ -140,16 +144,16 @@ public class PrivateController {
         return requestService.getParticipationRequestsByUserIdAndEventId(userId, eventId);
     }
 
-    @PatchMapping("/users/{userId}/events/{eventId}/requests")
+    @PatchMapping("/{userId}/events/{eventId}/requests")
     @ResponseStatus(HttpStatus.OK)
     public EventRequestStatusUpdateResultDto updateRequestStatus(@PathVariable
-                                                                       @Positive(message = "id пользователя должен " +
-                                                                               "быть положительным") Long userId,
-                                                                       @PathVariable
-                                                                       @Positive(message = "id события должен " +
-                                                                               "быть положительным") Long eventId,
-                                                                       @RequestBody
-                                                                       @Valid EventRequestStatusUpdateRequestDto dto) {
+                                                                 @Positive(message = "id пользователя должен " +
+                                                                         "быть положительным") Long userId,
+                                                                 @PathVariable
+                                                                 @Positive(message = "id события должен " +
+                                                                         "быть положительным") Long eventId,
+                                                                 @RequestBody
+                                                                 @Valid EventRequestStatusUpdateRequestDto dto) {
         log.info("Обновление статуса запроса на участие в событии с eventId {} и userId {}", eventId, userId);
         return requestService.updateRequestStatus(userId, eventId, dto);
     }

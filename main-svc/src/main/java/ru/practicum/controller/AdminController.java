@@ -5,16 +5,17 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.sql.Delete;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.annotation.RequestScope;
 import ru.practicum.category.dto.CategoryDto;
 import ru.practicum.category.dto.NewCategoryDto;
 import ru.practicum.category.service.CategoryService;
+import ru.practicum.compilation.dto.CompilationDtoResponse;
 import ru.practicum.compilation.dto.NewCompilationDto;
-import ru.practicum.compilation.model.Compilation;
+import ru.practicum.compilation.dto.UpdateCompilationRequestDto;
 import ru.practicum.compilation.service.CompilationService;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.UpdateEventAdminRequest;
@@ -22,6 +23,7 @@ import ru.practicum.event.service.EventService;
 import ru.practicum.user.dto.NewUserRequestDto;
 import ru.practicum.user.dto.UserDto;
 import ru.practicum.user.service.UserService;
+import ru.practicum.validator.CompilationEventsUniqueValidator;
 import ru.practicum.validator.DateTimeValidator;
 import ru.practicum.validator.LocationValidator;
 import ru.practicum.validator.StringSizeValidator;
@@ -29,6 +31,8 @@ import ru.practicum.validator.StringSizeValidator;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+import static java.util.stream.StreamSupport.stream;
 import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
 @RestController
@@ -128,13 +132,37 @@ public class AdminController {
         return eventService.getEventsByAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 
-    @PostMapping("/admin/compilations")
-    @ResponseStatus(HttpStatus.OK)
-    public Compilation createCompilation(@RequestBody @Valid NewCompilationDto dto) {
+    @PostMapping("/compilations")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CompilationDtoResponse createCompilation(@RequestBody @Valid NewCompilationDto dto) {
         log.info("Вызывается метод createCompilation в AdminController");
+        CompilationEventsUniqueValidator.validateEventsUnique(dto.getEvents());
+        if (dto.getEvents().stream().distinct().count() != dto.getEvents().size()) {
+            throw new IllegalArgumentException("В списке событий есть повторяющиеся элементы");
+        }
         if (dto.getPinned() == null) {
             dto.setPinned(false);
         }
         return compilationService.createCompilation(dto);
+    }
+
+    @PatchMapping("/compilations/{compId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CompilationDtoResponse updateCompilation(@PathVariable
+                                                    @Positive(message = "id подборки должен быть положительным")
+                                                    Long compId, @RequestBody @Valid UpdateCompilationRequestDto dto) {
+        log.info("Вызывается метод updateCompilation в AdminController");
+        CompilationEventsUniqueValidator.validateEventsUnique(dto.getEvents());
+
+        return compilationService.updateCompilation(compId, dto);
+    }
+
+    @DeleteMapping("/compilations/{compId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCompilation(@PathVariable
+                                  @Positive(message = "id подборки должен быть положительным")
+                                  Long compId) {
+        log.info("Вызывается метод deleteCompilation в AdminController");
+        compilationService.deleteCompilation(compId);
     }
 }

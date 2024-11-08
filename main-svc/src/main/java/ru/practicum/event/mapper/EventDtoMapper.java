@@ -82,19 +82,17 @@ public class EventDtoMapper {
     private static long getViews(StatsClient statsClient, Event event) {
         String[] uris = {"/events/" + event.getId()};
         ResponseEntity<Object> response = statsClient.getStats(LocalDateTime.now().minusYears(30).format(formatter),
-                LocalDateTime.now().format(formatter), uris, false);
+                LocalDateTime.now().format(formatter), uris, true);
 
         ObjectMapper objectMapper = new ObjectMapper();
         List<Map<String, Object>> statsResponseList = objectMapper.convertValue(response.getBody(),
                 new TypeReference<>() {
                 });
 
-        long views;
+        long views = 0L;
 
         if (statsResponseList != null && !statsResponseList.isEmpty()) {
             views = ((Number) statsResponseList.getFirst().get("hits")).longValue();
-        } else {
-            views = 0L;
         }
 
         return views;

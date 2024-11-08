@@ -1,5 +1,7 @@
 package ru.practicum.stats_server.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,6 +27,7 @@ import static ru.practicum.stats_server.service.DateTimeUtil.DATE_TIME_FORMAT;
 @RequestMapping
 @AllArgsConstructor
 @Slf4j
+@Validated
 public class StatsServerController {
 
     private final StatsServerService statsServerService;
@@ -37,7 +40,7 @@ public class StatsServerController {
      */
     @PostMapping(path = "/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public StatsRequestDto addStats(@RequestBody @Validated StatsRequestDto dto) {
+    public StatsRequestDto addStats(@RequestBody @Valid StatsRequestDto dto) {
         log.info("Вызывается метод addStats в контроллере StatsServerController");
         log.info("client ip: {}", dto.getIp());
         log.info("endpoint path: {}", dto.getUri());

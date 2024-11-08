@@ -1,9 +1,8 @@
 package ru.practicum.compilation.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import ru.practicum.event.model.Event;
 
@@ -31,9 +30,8 @@ public class Compilation {
     @NotNull
     @Column(nullable = false)
     private Boolean pinned;
-    @Column(nullable = false, length = 50)
-    @Min(1)
-    @Max(50)
+    @Column(nullable = false, length = 50, unique = true)
+    @Size(min = 1, max = 50, message = "Поле title должно содержать от 1 до 50 символов.")
     @NotNull
     private String title;
 }

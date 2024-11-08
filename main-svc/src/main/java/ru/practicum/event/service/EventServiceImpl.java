@@ -1,6 +1,5 @@
 package ru.practicum.event.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,8 +22,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static ru.practicum.util.Utils.APP_NAME;
 
 @Service
 @AllArgsConstructor
@@ -225,7 +222,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventShortDto> getEventsPublic(String text, Long[] categories, Boolean paid, LocalDateTime rangeStart,
                                                LocalDateTime rangeEnd, Boolean onlyAvailable, String sortToUpperCase,
-                                               int from, int size, HttpServletRequest request) {
+                                               int from, int size) {
 
         List<Long> categoryIds = (categories != null) ? Arrays.asList(categories) : null;
 
@@ -244,9 +241,7 @@ public class EventServiceImpl implements EventService {
                 eventsDtoList.sort(Comparator.comparing(EventShortDto::getViews));
             }
         }
-        events.forEach(event -> {
-            statsClient.addStats(APP_NAME, request);
-        });
+
         return eventsDtoList;
     }
 }

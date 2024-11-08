@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Embedded;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +32,7 @@ public class NewEventDto {
     @Embedded
     private Location location;
     private Boolean paid;
+    @Positive(message = "Значение поля participantLimit должно быть положительным числом")
     private Integer participantLimit;
     private Boolean requestModeration;
     @NotBlank(message = "Поле title не может быть пустым")

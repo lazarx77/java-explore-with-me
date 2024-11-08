@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,9 +13,12 @@ import ru.practicum.exception.*;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
 /**
  * Обработчик ошибок для контроллеров.
@@ -54,15 +58,15 @@ public class ErrorHandler {
 
 
     @ExceptionHandler(EventDateTimeException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleEventDateTimeException(final EventDateTimeException e) {
-        log.error("Возникла ошибка CONFLICT EventDateTimeException: {}.", e.getMessage());
+        log.error("Возникла ошибка BAD_REQUEST EventDateTimeException: {}.", e.getMessage());
 
         return new ErrorResponse(
                 getStackTrace(e),
                 e.getMessage(),
                 "Событие не удовлетворяет правилам редактирования.",
-                HttpStatus.CONFLICT.getReasonPhrase().toUpperCase(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase().toUpperCase(),
                 LocalDateTime.now()
         );
     }
@@ -98,7 +102,7 @@ public class ErrorHandler {
     @ExceptionHandler(StringSizeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleEventStringSizeException(final StringSizeException e) {
-        log.error("Возникла ошибка BAD_REQUEST EventDateTimeException: {}.", e.getMessage());
+        log.error("Возникла ошибка BAD_REQUEST StringSizeException: {}.", e.getMessage());
 
         return new ErrorResponse(
                 getStackTrace(e),
@@ -183,6 +187,19 @@ public class ErrorHandler {
                 e.getMessage(),
                 "Нарушено ограничение целостности.",
                 HttpStatus.CONFLICT.getReasonPhrase().toUpperCase(),
+                LocalDateTime.now()
+        );
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        log.error("Возникла ошибка валидации: {}.", e.getMessage());
+        return new ErrorResponse(
+                Collections.singletonList(e.getMessage()),
+                "Ошибка валидации данных.",
+                "Отсутствует обязательный параметр запроса " + e.getParameterName(),
+                HttpStatus.BAD_REQUEST.toString(),
                 LocalDateTime.now()
         );
     }

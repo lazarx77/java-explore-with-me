@@ -2,7 +2,9 @@ package ru.practicum.stats_server.error;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -13,12 +15,40 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.practicum.stats_server.service.DateTimeUtil.DATE_TIME_FORMAT;
+
 /**
  * Обработчик ошибок для контроллеров.
  */
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
+        log.error("Возникла ошибка валидации: {}.", e.getMessage());
+        return new ErrorResponse(
+                Collections.singletonList(e.getMessage()),
+                "Ошибка валидации данных.",
+                "Неверный формат даты. Верный формат: " + DATE_TIME_FORMAT,
+                HttpStatus.BAD_REQUEST.toString(),
+                LocalDateTime.now()
+        );
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        log.error("Возникла ошибка валидации: {}.", e.getMessage());
+        return new ErrorResponse(
+                Collections.singletonList(e.getMessage()),
+                "Ошибка валидации данных.",
+                "Неверный формат даты. Верный формат: " + DATE_TIME_FORMAT,
+                HttpStatus.BAD_REQUEST.toString(),
+                LocalDateTime.now()
+        );
+    }
 
     /**
      * Обрабатывает исключения валидации.
@@ -65,6 +95,7 @@ public class ErrorHandler {
                 LocalDateTime.now()
         );
     }
+
 
     /**
      * Обрабатывает исключения IllegalArgumentException.

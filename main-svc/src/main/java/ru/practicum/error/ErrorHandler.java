@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
-
 /**
  * Обработчик ошибок для контроллеров.
  */
@@ -107,11 +105,28 @@ public class ErrorHandler {
         return new ErrorResponse(
                 getStackTrace(e),
                 e.getMessage(),
-                "Событие не удовлетворяет правилам редактирования.",
+                "Длина текста не удовлетворяет правилам редактирования.",
                 HttpStatus.BAD_REQUEST.getReasonPhrase().toUpperCase(),
                 LocalDateTime.now()
         );
     }
+
+    @ExceptionHandler(CategoryContainsEvents.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleCategoryContainsEvents(final CategoryContainsEvents e) {
+        log.error("Возникла ошибка CONFLICT CategoryContainsEvents: {}.", e.getMessage());
+
+        return new
+
+                ErrorResponse(
+                getStackTrace(e),
+                e.getMessage(),
+                "Нарушено ограничение целостности.",
+                HttpStatus.CONFLICT.getReasonPhrase().toUpperCase(),
+                LocalDateTime.now()
+        );
+    }
+
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

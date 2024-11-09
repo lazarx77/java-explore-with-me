@@ -15,12 +15,15 @@ public interface RequestService {
 
     List<ParticipationRequestDto> getParticipationRequestsByUserId(Long userId);
 
-    @Transactional
-    ParticipationRequestDto cancelParticipationRequest(Long userId, Long requestId);
+//    @Transactional
+//    ParticipationRequestDto cancelParticipationRequest(Long userId, Long requestId);
 
     List<ParticipationRequestDto> getParticipationRequestsByUserIdAndEventId(Long userId, Long eventId);
 
     @Transactional
     EventRequestStatusUpdateResultDto updateRequestStatus(Long userId, Long eventId,
                                                                 EventRequestStatusUpdateRequestDto dto);
+
+    @Transactional
+    ParticipationRequestDto cancelRequest(Long requesterId, Long reqId);
 }

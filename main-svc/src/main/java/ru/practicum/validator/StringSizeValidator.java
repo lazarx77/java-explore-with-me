@@ -32,4 +32,15 @@ public class StringSizeValidator {
                     "Фактически: " + string.length());
         }
     }
+
+    public static void validateCategoryName(String name) {
+        log.info("Валидация длины названия категории (categoryName)");
+        if (name.isEmpty() || name.length() > 50) {
+            log.error("Длина названия категории (categoryName) должна быть от 1 до 50 символов. " +
+                    "Фактически: {}", name.length());
+            throw new StringSizeException("Длина названия категории (categoryName) должна быть от 1 до 50 символов." +
+                    "Фактически: " + name.length());
+        }
+    }
+
 }

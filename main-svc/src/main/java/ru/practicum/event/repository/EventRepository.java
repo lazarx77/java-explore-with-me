@@ -11,7 +11,8 @@ import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long>, EventRepositoryCustom {
 
-    @Query(value = "SELECT * FROM events WHERE initiator_id = :userId ORDER BY created_on DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
+    @Query(value = "SELECT * FROM events WHERE initiator_id = :userId ORDER BY created_on DESC LIMIT :limit " +
+            "OFFSET :offset", nativeQuery = true)
     List<Event> findAllByInitiatorId(@Param("userId") Long userId, @Param("offset") int offset, @Param("limit") int limit);
 
     Optional<Event> findByInitiatorIdAndId(Long userId, Long eventId);
@@ -20,4 +21,6 @@ public interface EventRepository extends JpaRepository<Event, Long>, EventReposi
 
     @Query("SELECT e FROM Event e WHERE (:ids IS NULL OR e.id IN :ids)")
     List<Event> findAllByIds(@Param("ids") List<Long> ids);
+
+    List<Event> findAllByCategoryId(Long catId);
 }

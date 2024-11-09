@@ -1,6 +1,7 @@
 package ru.practicum.category.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,5 +19,6 @@ public class Category {
     private Long id;
     @Column(nullable = false, unique = true)
     @Size(min = 1, max = 50)
+    @NotBlank(message = "Название категории не может быть пустым")
     private String name;
 }

@@ -8,6 +8,9 @@ import ru.practicum.category.dto.NewCategoryDto;
 import ru.practicum.category.mapper.CategoryDtoMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
+import ru.practicum.event.model.Event;
+import ru.practicum.event.repository.EventRepository;
+import ru.practicum.exception.CategoryContainsEvents;
 import ru.practicum.exception.CategoryNameDoubleException;
 import ru.practicum.exception.NotFoundException;
 
@@ -19,6 +22,7 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
 
     @Override
     public CategoryDto createNewCategory(NewCategoryDto dto) {
@@ -32,8 +36,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto updateCategory(Long catId, CategoryDto dto) {
         log.info("Вызывается метод updateCategory в CategoryServiceImpl");
-        Category category = findCategoryById( catId);
-        isCategoryExistByName(dto.getName());
+        Category category = findCategoryById(catId);
+        if (!category.getName().equals(dto.getName())) {
+            isCategoryExistByName(dto.getName());
+        }
         category.setName(dto.getName());
         log.info("Новое название категории с id {} направлено на сохранение в БД", catId);
         return CategoryDtoMapper.toCategoryDto(categoryRepository.save(category));
@@ -43,6 +49,12 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory(Long catId) {
         log.info("Вызывается метод deleteCategory в CategoryServiceImpl");
         Category category = findCategoryById(catId);
+        log.info("Проверка на наличие событий в категории с id {}", catId);
+        List<Event> events = eventRepository.findAllByCategoryId(catId);
+        if (!events.isEmpty()) {
+            throw new CategoryContainsEvents("Категория с id " + catId + " не может быть удалена, т.к. в ней есть" +
+                    " события: " + events.stream().map(Event::getId).toList());
+        }
         log.info("Запрос на удаление категории с id {} направлен в БД", catId);
         categoryRepository.delete(category);
     }

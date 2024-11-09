@@ -2,10 +2,7 @@ package ru.practicum.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Embedded;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.event.model.Location;
@@ -32,7 +29,7 @@ public class NewEventDto {
     @Embedded
     private Location location;
     private Boolean paid;
-    @Positive(message = "Значение поля participantLimit должно быть положительным числом")
+    @PositiveOrZero(message = "Значение поля participantLimit должно быть 0 или положительным числом")
     private Integer participantLimit;
     private Boolean requestModeration;
     @NotBlank(message = "Поле title не может быть пустым")

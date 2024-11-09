@@ -6,7 +6,8 @@ import java.util.stream.Stream;
 public enum Status {
     PENDING,
     CONFIRMED,
-    REJECTED;
+    REJECTED,
+    CANCELED;
 
     public static Optional<Status> from(String stringStatus) {
         return Stream.of(values())

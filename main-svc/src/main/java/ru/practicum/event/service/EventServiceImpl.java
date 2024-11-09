@@ -116,13 +116,15 @@ public class EventServiceImpl implements EventService {
             event.setTitle(dto.getTitle());
         }
 
-        StateAction stateAction = StateAction.from(dto.getStateAction())
-                .orElseThrow(() -> new StateActionException("Неизвестное действие: " + dto.getStateAction() +
-                        ". Возможные пользователю действии: CANCEL_REVIEW, SEND_TO_REVIEW."));
-        if (stateAction.equals(StateAction.SEND_TO_REVIEW)) {
-            event.setState(State.PENDING);
-        } else if (stateAction.equals(StateAction.CANCEL_REVIEW)) {
-            event.setState(State.CANCELED);
+        if (dto.getStateAction() != null) {
+            StateAction stateAction = StateAction.from(dto.getStateAction())
+                    .orElseThrow(() -> new StateActionException("Неизвестное действие: " + dto.getStateAction() +
+                            ". Возможные пользователю действии: CANCEL_REVIEW, SEND_TO_REVIEW."));
+            if (stateAction.equals(StateAction.SEND_TO_REVIEW)) {
+                event.setState(State.PENDING);
+            } else if (stateAction.equals(StateAction.CANCEL_REVIEW)) {
+                event.setState(State.CANCELED);
+            }
         }
         log.info("Обновление пользователем события с id: {}.", event.getId());
 
@@ -144,15 +146,18 @@ public class EventServiceImpl implements EventService {
                     " только для ожидающих модерации (PENDING) событий.");
         }
 
-        StateAction stateAction = StateAction.from(dto.getStateAction())
-                .orElseThrow(() -> new StateActionException("Некорректное действие StateAction: " +
-                        dto.getStateAction() + ". Возможные администратору действия: PUBLISH_EVENT, REJECT_EVENT."));
+        if (dto.getStateAction() != null) {
+            StateAction stateAction = StateAction.from(dto.getStateAction())
+                    .orElseThrow(() -> new StateActionException("Некорректное действие StateAction: " +
+                            dto.getStateAction() + ". Возможные администратору действия: PUBLISH_EVENT," +
+                            " REJECT_EVENT."));
 
-        if (stateAction.equals(StateAction.PUBLISH_EVENT)) {
-            event.setPublishedOn(LocalDateTime.now());
-            event.setState(State.PUBLISHED);
-        } else if (stateAction.equals(StateAction.REJECT_EVENT)) {
-            event.setState(State.CANCELED);
+            if (stateAction.equals(StateAction.PUBLISH_EVENT)) {
+                event.setPublishedOn(LocalDateTime.now());
+                event.setState(State.PUBLISHED);
+            } else if (stateAction.equals(StateAction.REJECT_EVENT)) {
+                event.setState(State.CANCELED);
+            }
         }
 
         if (dto.getAnnotation() != null) {

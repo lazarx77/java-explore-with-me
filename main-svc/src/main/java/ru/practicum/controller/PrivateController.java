@@ -121,16 +121,16 @@ public class PrivateController {
 
     @PatchMapping("/{userId}/requests/{reqId}/cancel")
     @ResponseStatus(HttpStatus.OK)
-    public ParticipationRequestDto cancelParticipationRequestByUserId(@PathVariable
-                                                                      @Positive(message = "id пользователя должен " +
-                                                                              "быть положительным") Long userId,
-                                                                      @PathVariable
-                                                                      @Positive(message = "id запроса на учаетие " +
-                                                                              "должен быть положительным")
-                                                                      Long reqId) {
-        log.info("Отмена запроса на участие в событии пользователя с userId {} и reqId {}", userId, reqId);
-        return requestService.cancelParticipationRequest(userId, reqId);
+    public ParticipationRequestDto cancelRequestByUserIdAndEventId(@PathVariable
+                                                                   @Positive(message = "id пользователя должен " +
+                                                                           "быть положительным") Long userId,
+                                                                   @PathVariable
+                                                                   @Positive(message = "id запроса должен " +
+                                                                           "быть положительным") Long reqId) {
+        log.info("Отмена запроса на участие в событии с запросом reqId {} и userId {}", reqId, userId);
+        return requestService.cancelRequest(userId, reqId);
     }
+
 
     @GetMapping("/{userId}/events/{eventId}/requests")
     @ResponseStatus(HttpStatus.OK)
@@ -157,6 +157,4 @@ public class PrivateController {
         log.info("Обновление статуса запроса на участие в событии с eventId {} и userId {}", eventId, userId);
         return requestService.updateRequestStatus(userId, eventId, dto);
     }
-
-
 }

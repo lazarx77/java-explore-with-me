@@ -61,7 +61,7 @@ public class RequestServiceImpl implements RequestService {
                 .event(event)
                 .requester(requester)
                 .build();
-        if (event.getParticipantLimit() == 0 && !event.getRequestModeration()) {
+        if (event.getParticipantLimit() == 0 || !event.getRequestModeration()) {
             request.setStatus(Status.CONFIRMED);
             if (event.getConfirmedRequests() == null) {
                 event.setConfirmedRequests(1L);
@@ -86,30 +86,30 @@ public class RequestServiceImpl implements RequestService {
                 .toList();
     }
 
-    @Override
-    public ParticipationRequestDto cancelParticipationRequest(Long userId, Long requestId) {
-        log.info("Вызывается метод cancelParticipationRequest в RequestServiceImpl");
-        log.info("Проверка на существование пользователя с id {}", userId);
-        userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с таким userId: " + userId + "  не найден"));
-        log.info("Проверка на существование запроса с id {}", requestId);
-        Request request = requestRepository.findById(requestId)
-                .orElseThrow(() -> new NotFoundException("Запрос с таким requestId: " + requestId + " не найден"));
-        if (!request.getRequester().getId().equals(userId)) {
-            log.info("Пользователь userId: " + userId + " не может отменить запрос на участие в событии eventId: " +
-                    "участие в событии eventId: " + request.getEvent().getId() + ", так как он не является его" +
-                    " инициатором.");
-            throw new NotFoundException("Пользователь userId: " + userId + " не может отменить запрос на " +
-                    "участие в событии eventId: " + request.getEvent().getId() + ", так как он не является его" +
-                    " инициатором.");
-        }
-        request.setStatus(Status.PENDING);
-        Event event = eventRepository.findById(request.getEvent().getId()).orElseThrow(() ->
-                new NotFoundException("Событие с таким id: " + request.getEvent().getId() + " не найдено"));
-        event.setConfirmedRequests(event.getConfirmedRequests() - 1);
-        eventRepository.save(event);
-        return ParticipationRequestDtoMapper.toParticipationRequestDto(requestRepository.save(request));
-    }
+//    @Override
+//    public ParticipationRequestDto cancelParticipationRequest(Long userId, Long requestId) {
+//        log.info("Вызывается метод cancelParticipationRequest в RequestServiceImpl");
+//        log.info("Проверка на существование пользователя с id {}", userId);
+//        userRepository.findById(userId)
+//                .orElseThrow(() -> new NotFoundException("Пользователь с таким userId: " + userId + "  не найден"));
+//        log.info("Проверка на существование запроса с id {}", requestId);
+//        Request request = requestRepository.findById(requestId)
+//                .orElseThrow(() -> new NotFoundException("Запрос с таким requestId: " + requestId + " не найден"));
+//        if (!request.getRequester().getId().equals(userId)) {
+//            log.info("Пользователь userId: " + userId + " не может отменить запрос на участие в событии eventId: " +
+//                    "участие в событии eventId: " + request.getEvent().getId() + ", так как он не является его" +
+//                    " инициатором.");
+//            throw new NotFoundException("Пользователь userId: " + userId + " не может отменить запрос на " +
+//                    "участие в событии eventId: " + request.getEvent().getId() + ", так как он не является его" +
+//                    " инициатором.");
+//        }
+//        request.setStatus(Status.PENDING);
+//        Event event = eventRepository.findById(request.getEvent().getId()).orElseThrow(() ->
+//                new NotFoundException("Событие с таким id: " + request.getEvent().getId() + " не найдено"));
+//        event.setConfirmedRequests(event.getConfirmedRequests() - 1);
+//        eventRepository.save(event);
+//        return ParticipationRequestDtoMapper.toParticipationRequestDto(requestRepository.save(request));
+//    }
 
     @Override
     public List<ParticipationRequestDto> getParticipationRequestsByUserIdAndEventId(Long userId, Long eventId) {
@@ -121,7 +121,7 @@ public class RequestServiceImpl implements RequestService {
         eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Событие с таким id: " + eventId + " не найдено"));
 
-        return requestRepository.findAllByEventIdAndRequesterId(eventId, userId).stream()
+        return requestRepository.findAllByInitiatorIdAndEventId(userId, eventId).stream()
                 .map(ParticipationRequestDtoMapper::toParticipationRequestDto)
                 .toList();
     }
@@ -190,5 +190,29 @@ public class RequestServiceImpl implements RequestService {
                 .toList();
 
         return new EventRequestStatusUpdateResultDto(confirmed, rejected);
+    }
+
+    @Override
+    public ParticipationRequestDto cancelRequest(Long requesterId, Long reqId) {
+        log.info("Вызывается метод cancelRequest в RequestServiceImpl");
+
+        log.info("Проверка на существование пользователя с id {}", requesterId);
+        userRepository.findById(requesterId)
+                .orElseThrow(() -> new NotFoundException("Пользователь с таким id: " + requesterId + "  не найден"));
+
+        log.info("Проверка на существование запроса с id {} c его реквестером {}", reqId, requesterId);
+        Request request = requestRepository.findByIdAndRequesterId(reqId, requesterId).orElseThrow(() ->
+                new NotFoundException("Запрос с таким id " + reqId + " у пользователя с userId: " + requesterId +
+                        " не существует."));
+        log.info("Запрос:{} найден в БД", request);
+
+        if (request.getStatus().equals(Status.CONFIRMED)) {
+            Event event = request.getEvent();
+            event.setConfirmedRequests(event.getConfirmedRequests() - 1);
+            eventRepository.save(event);
+        }
+        request.setStatus(Status.CANCELED);
+        log.info("Запрос:{} передается на запись в БД", request);
+        return ParticipationRequestDtoMapper.toParticipationRequestDto(requestRepository.save(request));
     }
 }

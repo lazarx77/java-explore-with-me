@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.sql.Delete;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -31,8 +30,6 @@ import ru.practicum.validator.StringSizeValidator;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
-import static java.util.stream.StreamSupport.stream;
 import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
 @RestController
@@ -50,7 +47,7 @@ public class AdminController {
 
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto createUser(@RequestBody NewUserRequestDto dto) {
+    public UserDto createUser(@RequestBody @Valid NewUserRequestDto dto) {
         log.info("Вызывается метод createUser в AdminController");
         return userService.createUser(dto);
     }
@@ -73,7 +70,7 @@ public class AdminController {
 
     @PostMapping("/categories")
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryDto updateUser(@RequestBody NewCategoryDto dto) {
+    public CategoryDto createCategory(@RequestBody @Valid NewCategoryDto dto) {
         log.info("Вызывается метод updateUser в AdminController");
         return categoryService.createNewCategory(dto);
     }
@@ -83,6 +80,9 @@ public class AdminController {
     public CategoryDto updateCategory(@PathVariable @Positive(message = "id категории должен быть положительным")
                                       Long catId, @RequestBody CategoryDto dto) {
         log.info("Вызывается метод updateCategory в AdminController");
+        if (dto.getName() != null) {
+            StringSizeValidator.validateCategoryName(dto.getName());
+        }
         return categoryService.updateCategory(catId, dto);
     }
 
@@ -136,9 +136,8 @@ public class AdminController {
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationDtoResponse createCompilation(@RequestBody @Valid NewCompilationDto dto) {
         log.info("Вызывается метод createCompilation в AdminController");
-        CompilationEventsUniqueValidator.validateEventsUnique(dto.getEvents());
-        if (dto.getEvents().stream().distinct().count() != dto.getEvents().size()) {
-            throw new IllegalArgumentException("В списке событий есть повторяющиеся элементы");
+        if (dto.getEvents() != null) {
+            CompilationEventsUniqueValidator.validateEventsUnique(dto.getEvents());
         }
         if (dto.getPinned() == null) {
             dto.setPinned(false);
@@ -152,7 +151,9 @@ public class AdminController {
                                                     @Positive(message = "id подборки должен быть положительным")
                                                     Long compId, @RequestBody @Valid UpdateCompilationRequestDto dto) {
         log.info("Вызывается метод updateCompilation в AdminController");
-        CompilationEventsUniqueValidator.validateEventsUnique(dto.getEvents());
+        if (dto.getEvents() != null) {
+            CompilationEventsUniqueValidator.validateEventsUnique(dto.getEvents());
+        }
 
         return compilationService.updateCompilation(compId, dto);
     }

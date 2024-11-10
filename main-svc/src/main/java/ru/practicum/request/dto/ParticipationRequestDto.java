@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 
 import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
+/**
+ * DTO для представления запроса на участие в событии.
+ */
 @Getter
 @Setter
 @Builder

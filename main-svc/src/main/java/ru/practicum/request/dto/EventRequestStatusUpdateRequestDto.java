@@ -8,6 +8,9 @@ import ru.practicum.request.model.Status;
 
 import java.util.List;
 
+/**
+ * DTO для обновления статуса запросов на участие в событии.
+ */
 @Getter
 @Setter
 public class EventRequestStatusUpdateRequestDto {

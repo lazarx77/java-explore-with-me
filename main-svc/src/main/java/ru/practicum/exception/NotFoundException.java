@@ -1,5 +1,8 @@
 package ru.practicum.exception;
 
+/**
+ * Исключение, возникающее, когда запрашиваемый ресурс не найден.
+ */
 public class NotFoundException extends RuntimeException {
 
     public NotFoundException(String message) {

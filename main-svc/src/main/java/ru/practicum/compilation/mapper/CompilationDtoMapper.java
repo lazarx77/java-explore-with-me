@@ -5,16 +5,22 @@ import ru.practicum.compilation.model.Compilation;
 import ru.practicum.event.mapper.EventDtoMapper;
 import ru.practicum.stats_client.client.StatsClient;
 
+
+/**
+ * Класс для преобразования объектов компиляции в объекты CompilationDtoResponse.
+ * <p>
+ * Этот класс содержит статические методы, которые позволяют конвертировать
+ * сущности модели компиляции в DTO, используемые для передачи данных о компиляциях.
+ */
 public class CompilationDtoMapper {
 
-//    public static Compilation toCompilation(NewCompilationDto compilationDto) {
-//
-//        return Compilation.builder()
-//                .title(compilationDto.getTitle())
-//                .pinned(compilationDto.getPinned())
-//                .build();
-//    }
-
+    /**
+     * Преобразует объект компиляции в объект CompilationDtoResponse.
+     *
+     * @param compilation объект компиляции, который необходимо преобразовать.
+     * @param statsClient клиент для получения статистики событий.
+     * @return объект CompilationDtoResponse, содержащий данные из переданного объекта компиляции.
+     */
     public static CompilationDtoResponse toCompilationDtoResponse(Compilation compilation, StatsClient statsClient) {
         return CompilationDtoResponse.builder()
                 .id(compilation.getId())

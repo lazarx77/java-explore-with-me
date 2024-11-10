@@ -10,6 +10,10 @@ import java.time.LocalDateTime;
 
 import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
+/**
+ * Запрос на обновление события от администратора.
+ * Содержит информацию о полях, которые могут быть изменены при редактировании события.
+ */
 @Getter
 @Setter
 public class UpdateEventAdminRequest {

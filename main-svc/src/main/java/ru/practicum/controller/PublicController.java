@@ -25,6 +25,10 @@ import java.util.List;
 import static ru.practicum.util.Utils.APP_NAME;
 import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
+/**
+ * Контроллер для обработки публичных запросов к ресурсам приложения.
+ * Обеспечивает доступ к категориям, событиям и подборкам для пользователей.
+ */
 @RestController
 @Slf4j
 @CrossOrigin(origins = "*")
@@ -38,6 +42,13 @@ public class PublicController {
     private final StatsClient statsClient;
     private final CompilationService compilationService;
 
+    /**
+     * Получает список категорий с пагинацией.
+     *
+     * @param from индекс для пагинации
+     * @param size количество категорий для выборки
+     * @return список категорий
+     */
     @GetMapping("/categories")
     @ResponseStatus(HttpStatus.OK)
     public List<CategoryDto> getCategories(@RequestParam(defaultValue = "0") @PositiveOrZero int from,
@@ -45,6 +56,12 @@ public class PublicController {
         return categoryService.getCategories(from, size);
     }
 
+    /**
+     * Получает категорию по идентификатору.
+     *
+     * @param catId идентификатор категории
+     * @return категория
+     */
     @GetMapping("/categories/{catId}")
     @ResponseStatus(HttpStatus.OK)
     public CategoryDto getCategory(@PathVariable @Positive(message = "id категории должен быть положительным")
@@ -52,6 +69,14 @@ public class PublicController {
         return categoryService.getCategory(catId);
     }
 
+    /**
+     * Получает событие по идентификатору.
+     * Также регистрирует статистику доступа к событию.
+     *
+     * @param eventId идентификатор события
+     * @param request объект HTTP-запроса
+     * @return полное описание события
+     */
     @GetMapping("/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public EventFullDto getEvent(@PathVariable @Positive(message = "id события должен быть положительным")
@@ -60,6 +85,21 @@ public class PublicController {
         return eventService.getEventPublic(eventId);
     }
 
+    /**
+     * Получает список событий с возможностью фильтрации и пагинации.
+     *
+     * @param text          текст для поиска
+     * @param categories    массив идентификаторов категорий
+     * @param paid          фильтр по платным событиям
+     * @param rangeStart    начало диапазона дат
+     * @param rangeEnd      конец диапазона дат
+     * @param onlyAvailable фильтр по доступным событиям
+     * @param sort          порядок сортировки
+     * @param from          индекс для пагинации
+     * @param size          количество событий для выборки
+     * @param request       объект HTTP-запроса
+     * @return список событий
+     */
     @GetMapping("/events")
     @ResponseStatus(HttpStatus.OK)
     public List<EventShortDto> getEventsPublic(@RequestParam(required = false) String text,
@@ -82,13 +122,6 @@ public class PublicController {
         log.info("Запуск валидации параметров запроса в getEventsPublic");
         ParamsValidator.validateGetEventsPublicParams(categories, rangeStart, rangeEnd, sortToUpperCase);
 
-//        if (sortToUpperCase != null) {
-//            if (!sortToUpperCase.equals("EVENT_DATE") && !sortToUpperCase.equals("VIEWS")) {
-//                throw new IllegalArgumentException("Некорректный параметр сортировки. Допустимые значения: EVENT_DATE," +
-//                        "VIEWS. Переданное значение: " + sortToUpperCase);
-//            }
-//        }
-
         statsClient.addStats(APP_NAME, request);
 
         return eventService.getEventsPublic(text,
@@ -103,6 +136,14 @@ public class PublicController {
 
     }
 
+    /**
+     * Получает список подборок событий с пагинацией.
+     *
+     * @param pinned фильтр по закрепленным подборкам
+     * @param from   индекс для пагинации
+     * @param size   количество подборок для выборки
+     * @return список подборок
+     */
     @GetMapping("/compilations")
     @ResponseStatus(HttpStatus.OK)
     public List<CompilationDtoResponse> getCompilations(@RequestParam(required = false) Boolean pinned,
@@ -120,6 +161,4 @@ public class PublicController {
                                                  Long compId) {
         return compilationService.getCompilationPublic(compId);
     }
-
-
 }

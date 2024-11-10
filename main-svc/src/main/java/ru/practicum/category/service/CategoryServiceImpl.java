@@ -16,6 +16,10 @@ import ru.practicum.exception.NotFoundException;
 
 import java.util.List;
 
+/**
+ * Реализация сервиса для работы с категориями.
+ * <p>
+ */
 @Service
 @Slf4j
 @AllArgsConstructor
@@ -24,6 +28,9 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final EventRepository eventRepository;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CategoryDto createNewCategory(NewCategoryDto dto) {
         log.info("Вызывается метод createNewCategory в CategoryServiceImpl");
@@ -33,6 +40,9 @@ public class CategoryServiceImpl implements CategoryService {
         return CategoryDtoMapper.toCategoryDto(categoryRepository.save(category));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CategoryDto updateCategory(Long catId, CategoryDto dto) {
         log.info("Вызывается метод updateCategory в CategoryServiceImpl");
@@ -45,6 +55,9 @@ public class CategoryServiceImpl implements CategoryService {
         return CategoryDtoMapper.toCategoryDto(categoryRepository.save(category));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteCategory(Long catId) {
         log.info("Вызывается метод deleteCategory в CategoryServiceImpl");
@@ -59,6 +72,9 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.delete(category);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<CategoryDto> getCategories(int from, int size) {
         log.info("Вызывается метод getCategories в CategoryServiceImpl");
@@ -66,6 +82,9 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryList.stream().map(CategoryDtoMapper::toCategoryDto).toList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CategoryDto getCategory(Long catId) {
         log.info("Вызывается метод getCategoryById в CategoryServiceImpl");
@@ -73,6 +92,9 @@ public class CategoryServiceImpl implements CategoryService {
         return CategoryDtoMapper.toCategoryDto(category);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     private void isCategoryExistByName(String name) {
         log.info("Проверка уникальности названия категории {}", name);
         if (categoryRepository.findByName(name).isPresent()) {
@@ -81,6 +103,9 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     private Category findCategoryById(Long catId) {
         log.info("Проверка наличия категории с id {}", catId);
         return categoryRepository.findById(catId)

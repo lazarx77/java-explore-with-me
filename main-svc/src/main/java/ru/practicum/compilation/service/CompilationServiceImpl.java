@@ -17,16 +17,21 @@ import ru.practicum.stats_client.client.StatsClient;
 
 import java.util.List;
 
+/**
+ * Реализация сервиса для работы с компиляциями событий.
+ */
 @Service
 @AllArgsConstructor
 @Slf4j
 public class CompilationServiceImpl implements CompilationService {
 
     private final StatsClient statsClient;
+    private final CompilationRepository compilationRepository;
+    private final EventRepository eventRepository;
 
-    CompilationRepository compilationRepository;
-    EventRepository eventRepository;
-
+    /**
+     * {@inheritDoc}
+     */
     public CompilationDtoResponse createCompilation(NewCompilationDto dto) {
         log.info("Вызывается метод createCompilation в CompilationServiceImpl");
         log.info("Проверка на наличие подборки с названием /" + dto.getTitle() + "/.");
@@ -45,6 +50,9 @@ public class CompilationServiceImpl implements CompilationService {
         return CompilationDtoMapper.toCompilationDtoResponse(compilationRepository.save(compilation), statsClient);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CompilationDtoResponse updateCompilation(Long compId, UpdateCompilationRequestDto dto) {
         log.info("Вызывается метод updateCompilation в CompilationServiceImpl");
@@ -71,6 +79,9 @@ public class CompilationServiceImpl implements CompilationService {
                 .toCompilationDtoResponse(compilationRepository.save(compilation), statsClient);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteCompilation(Long compId) {
         log.info("Вызывается метод deleteCompilation в CompilationServiceImpl");
@@ -80,6 +91,9 @@ public class CompilationServiceImpl implements CompilationService {
         compilationRepository.delete(compilation);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<CompilationDtoResponse> getCompilationsPublic(Boolean pinned, int from, int size) {
         log.info("Вызывается метод getCompilationsPublic в CompilationServiceImpl");
@@ -94,6 +108,9 @@ public class CompilationServiceImpl implements CompilationService {
                 .toList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CompilationDtoResponse getCompilationPublic(Long compId) {
         log.info("Вызывается метод getCompilationPublic в CompilationServiceImpl");

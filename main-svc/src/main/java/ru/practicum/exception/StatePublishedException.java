@@ -1,5 +1,8 @@
 package ru.practicum.exception;
 
+/**
+ * Исключение, возникающее при попытке изменить состояние уже опубликованного объекта.
+ */
 public class StatePublishedException extends RuntimeException {
 
     public StatePublishedException(String message) {

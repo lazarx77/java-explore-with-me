@@ -14,6 +14,9 @@ import java.time.LocalDateTime;
 
 import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
+/**
+ * Полная информация о событии.
+ */
 @Getter
 @Setter
 @Builder

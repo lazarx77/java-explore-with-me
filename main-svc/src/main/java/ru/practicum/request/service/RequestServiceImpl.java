@@ -21,6 +21,10 @@ import ru.practicum.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Реализация сервиса для работы с запросами на участие в событиях.
+ * Предоставляет методы для добавления, получения, обновления и отмены запросов.
+ */
 @Service
 @Slf4j
 @AllArgsConstructor
@@ -30,6 +34,9 @@ public class RequestServiceImpl implements RequestService {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ParticipationRequestDto addParticipationRequestToEvent(Long userId, Long eventId) {
         log.info("Вызывается метод addParticipationRequestToEvent в RequestServiceImpl");
@@ -75,6 +82,9 @@ public class RequestServiceImpl implements RequestService {
         return ParticipationRequestDtoMapper.toParticipationRequestDto(requestRepository.save(request));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<ParticipationRequestDto> getParticipationRequestsByUserId(Long userId) {
         log.info("Вызывается метод getParticipationRequestsByUserId в RequestServiceImpl");
@@ -86,31 +96,9 @@ public class RequestServiceImpl implements RequestService {
                 .toList();
     }
 
-//    @Override
-//    public ParticipationRequestDto cancelParticipationRequest(Long userId, Long requestId) {
-//        log.info("Вызывается метод cancelParticipationRequest в RequestServiceImpl");
-//        log.info("Проверка на существование пользователя с id {}", userId);
-//        userRepository.findById(userId)
-//                .orElseThrow(() -> new NotFoundException("Пользователь с таким userId: " + userId + "  не найден"));
-//        log.info("Проверка на существование запроса с id {}", requestId);
-//        Request request = requestRepository.findById(requestId)
-//                .orElseThrow(() -> new NotFoundException("Запрос с таким requestId: " + requestId + " не найден"));
-//        if (!request.getRequester().getId().equals(userId)) {
-//            log.info("Пользователь userId: " + userId + " не может отменить запрос на участие в событии eventId: " +
-//                    "участие в событии eventId: " + request.getEvent().getId() + ", так как он не является его" +
-//                    " инициатором.");
-//            throw new NotFoundException("Пользователь userId: " + userId + " не может отменить запрос на " +
-//                    "участие в событии eventId: " + request.getEvent().getId() + ", так как он не является его" +
-//                    " инициатором.");
-//        }
-//        request.setStatus(Status.PENDING);
-//        Event event = eventRepository.findById(request.getEvent().getId()).orElseThrow(() ->
-//                new NotFoundException("Событие с таким id: " + request.getEvent().getId() + " не найдено"));
-//        event.setConfirmedRequests(event.getConfirmedRequests() - 1);
-//        eventRepository.save(event);
-//        return ParticipationRequestDtoMapper.toParticipationRequestDto(requestRepository.save(request));
-//    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<ParticipationRequestDto> getParticipationRequestsByUserIdAndEventId(Long userId, Long eventId) {
         log.info("Вызывается метод getParticipationRequestsByEventId в RequestServiceImpl");
@@ -126,6 +114,9 @@ public class RequestServiceImpl implements RequestService {
                 .toList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public EventRequestStatusUpdateResultDto updateRequestStatus(Long userId, Long eventId,
                                                                  EventRequestStatusUpdateRequestDto dto) {
@@ -192,6 +183,9 @@ public class RequestServiceImpl implements RequestService {
         return new EventRequestStatusUpdateResultDto(confirmed, rejected);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ParticipationRequestDto cancelRequest(Long requesterId, Long reqId) {
         log.info("Вызывается метод cancelRequest в RequestServiceImpl");

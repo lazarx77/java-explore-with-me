@@ -21,9 +21,20 @@ import java.util.Map;
 
 import static ru.practicum.util.Utils.formatter;
 
+/**
+ * Mapper для преобразования объектов события между различными представлениями (DTO) и сущностями.
+ * Содержит методы для преобразования новых событий, полных событий и кратких событий.
+ */
 @AllArgsConstructor
 public class EventDtoMapper {
 
+    /**
+     * Преобразует NewEventDto в сущность Event.
+     *
+     * @param dto                объект NewEventDto, содержащий данные нового события.
+     * @param categoryRepository репозиторий категорий для получения категории события.
+     * @return сущность Event, созданная на основе данных из dto.
+     */
     public static Event mapToEvent(NewEventDto dto, CategoryRepository categoryRepository) {
         return Event.builder()
                 .annotation(dto.getAnnotation())
@@ -43,6 +54,13 @@ public class EventDtoMapper {
                 .build();
     }
 
+    /**
+     * Преобразует сущность Event в EventFullDto.
+     *
+     * @param event       сущность события.
+     * @param statsClient клиент для получения статистики просмотров.
+     * @return объект EventFullDto, содержащий полную информацию о событии.
+     */
     public static EventFullDto toEventFullDto(Event event, StatsClient statsClient) {
         return EventFullDto.builder()
                 .id(event.getId())
@@ -64,6 +82,13 @@ public class EventDtoMapper {
                 .build();
     }
 
+    /**
+     * Преобразует сущность Event в EventShortDto.
+     *
+     * @param event       сущность события.
+     * @param statsClient клиент для получения статистики просмотров.
+     * @return объект EventShortDto, содержащий краткую информацию о событии.
+     */
     public static EventShortDto toEventShortDto(Event event, StatsClient statsClient) {
 
         return EventShortDto.builder()

@@ -2,7 +2,10 @@ package ru.practicum.event.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import ru.practicum.category.model.Category;
 import ru.practicum.compilation.model.Compilation;
@@ -13,6 +16,11 @@ import java.util.List;
 
 import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
+
+/**
+ * Класс, представляющий событие в системе.
+ * Содержит информацию о событии, включая аннотацию, описание, дату события, инициатора и другие параметры.
+ */
 @Entity
 @Getter
 @Setter

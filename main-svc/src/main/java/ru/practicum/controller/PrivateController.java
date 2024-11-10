@@ -23,6 +23,10 @@ import ru.practicum.validator.StringSizeValidator;
 
 import java.util.List;
 
+/**
+ * Контроллер для управления событиями и запросами на участие пользователей.
+ * Обрабатывает запросы, связанные с событиями, которые созданы пользователями.
+ */
 @RestController
 @Slf4j
 @CrossOrigin(origins = "*")
@@ -34,16 +38,31 @@ public class PrivateController {
     private final EventService eventService;
     private final RequestService requestService;
 
+    /**
+     * Добавляет новое событие для пользователя.
+     *
+     * @param userId идентификатор пользователя
+     * @param dto    данные нового события
+     * @return созданное событие
+     */
     @PostMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto addEvent(@PathVariable
                                  @Positive(message = "id пользователя должен быть положительным") Long userId,
                                  @Valid @RequestBody NewEventDto dto) {
         log.info("Добавление нового события в PrivateController для пользователя с id {}", userId);
-        DateTimeValidator.ValidateDatetime(dto.getEventDate());
+        DateTimeValidator.validateDateTime(dto.getEventDate());
         return eventService.addNewEvent(userId, dto);
     }
 
+    /**
+     * Получает список событий пользователя с пагинацией.
+     *
+     * @param userId идентификатор пользователя
+     * @param from   индекс для пагинации
+     * @param size   количество событий для выборки
+     * @return список событий
+     */
     @GetMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.OK)
     public List<EventShortDto> getEventsByUserId(@PathVariable @Positive(message = "id пользователя должен быть " +
@@ -54,6 +73,13 @@ public class PrivateController {
         return eventService.getEventsByUserId(userId, from, size);
     }
 
+    /**
+     * Получает событие по идентификатору пользователя и события.
+     *
+     * @param userId  идентификатор пользователя
+     * @param eventId идентификатор события
+     * @return событие
+     */
     @GetMapping("/{userId}/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public EventFullDto getEventByUserIdAndEventId(@PathVariable @Positive(message = "id пользователя должен быть " +
@@ -64,6 +90,14 @@ public class PrivateController {
         return eventService.getEventByUserIdAndEventId(userId, eventId);
     }
 
+    /**
+     * Обновляет событие пользователя.
+     *
+     * @param userId  идентификатор пользователя
+     * @param eventId идентификатор события
+     * @param dto     данные для обновления события
+     * @return обновленное событие
+     */
     @PatchMapping("/{userId}/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public EventFullDto updateEventByUser(@PathVariable @Positive(message = "id пользователя должен быть " +
@@ -82,10 +116,10 @@ public class PrivateController {
             StringSizeValidator.validateTitle(dto.getTitle());
         }
         if (dto.getEventDate() != null) {
-            DateTimeValidator.ValidateDatetime(dto.getEventDate());
+            DateTimeValidator.validateDateTime(dto.getEventDate());
         }
         if (dto.getEventDate() != null) {
-            DateTimeValidator.ValidateDatetime(dto.getEventDate());
+            DateTimeValidator.validateDateTime(dto.getEventDate());
         }
         if (dto.getLocation() != null) {
             LocationValidator.validateLocation(dto.getLocation());
@@ -96,6 +130,13 @@ public class PrivateController {
         return eventService.updateEventByUser(userId, eventId, dto);
     }
 
+    /**
+     * Добавляет запрос на участие в событии.
+     *
+     * @param userId  идентификатор пользователя
+     * @param eventId идентификатор события
+     * @return запрос на участие
+     */
     @PostMapping("/{userId}/requests")
     @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto addParticipationRequestToEvent(@PathVariable
@@ -109,6 +150,12 @@ public class PrivateController {
         return requestService.addParticipationRequestToEvent(userId, eventId);
     }
 
+    /**
+     * Получает список запросов на участие пользователя.
+     *
+     * @param userId идентификатор пользователя
+     * @return список запросов на участие
+     */
     @GetMapping("/{userId}/requests")
     @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getParticipationRequestsByUserId(@PathVariable
@@ -119,6 +166,13 @@ public class PrivateController {
         return requestService.getParticipationRequestsByUserId(userId);
     }
 
+    /**
+     * Отменяет запрос на участие в событии.
+     *
+     * @param userId идентификатор пользователя
+     * @param reqId  идентификатор запроса
+     * @return отмененный запрос на участие
+     */
     @PatchMapping("/{userId}/requests/{reqId}/cancel")
     @ResponseStatus(HttpStatus.OK)
     public ParticipationRequestDto cancelRequestByUserIdAndEventId(@PathVariable
@@ -131,7 +185,13 @@ public class PrivateController {
         return requestService.cancelRequest(userId, reqId);
     }
 
-
+    /**
+     * Получает запросы на участие в событии по идентификатору пользователя и события.
+     *
+     * @param userId  идентификатор пользователя
+     * @param eventId идентификатор события
+     * @return список запросов на участие
+     */
     @GetMapping("/{userId}/events/{eventId}/requests")
     @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getParticipationRequests(@PathVariable
@@ -144,6 +204,14 @@ public class PrivateController {
         return requestService.getParticipationRequestsByUserIdAndEventId(userId, eventId);
     }
 
+    /**
+     * Обновляет статус запроса на участие в событии.
+     *
+     * @param userId  идентификатор пользователя
+     * @param eventId идентификатор события
+     * @param dto     данные для обновления статуса запроса
+     * @return результат обновления статуса запроса
+     */
     @PatchMapping("/{userId}/events/{eventId}/requests")
     @ResponseStatus(HttpStatus.OK)
     public EventRequestStatusUpdateResultDto updateRequestStatus(@PathVariable

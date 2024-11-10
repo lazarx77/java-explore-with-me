@@ -6,6 +6,12 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * Data Transfer Object (DTO) для обновления компиляции событий.
+ * <p>
+ * Этот класс используется для передачи данных о компиляции, которую необходимо обновить,
+ * включая список идентификаторов событий, заголовок компиляции и статус закрепления.
+ */
 @Getter
 @Setter
 public class UpdateCompilationRequestDto {

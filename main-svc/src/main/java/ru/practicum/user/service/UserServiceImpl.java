@@ -15,6 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Реализация сервиса для управления пользователями.
+ */
 @Service
 @Slf4j
 @AllArgsConstructor
@@ -22,6 +25,9 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UserDto createUser(NewUserRequestDto dto) {
         log.info("Вызывается метод createUser в UserServiceImpl");
@@ -33,6 +39,9 @@ public class UserServiceImpl implements UserService {
         return UserDtoMapper.mapToUserDto(userRepository.save(user));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<UserDto> getUsers(int from, int size, Long[] ids) {
         log.info("Вызывается метод getUsers в UserServiceImpl");
@@ -45,6 +54,9 @@ public class UserServiceImpl implements UserService {
         return userList.stream().map(UserDtoMapper::mapToUserDto).collect(Collectors.toList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteUser(Long userId) {
         log.info("Вызывается метод deleteUser в UserServiceImpl");

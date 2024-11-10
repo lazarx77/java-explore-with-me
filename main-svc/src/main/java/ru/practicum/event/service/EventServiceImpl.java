@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+/**
+ * Реализация сервиса для работы с событиями.
+ */
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -33,6 +37,9 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final StatsClient statsClient;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public EventFullDto addNewEvent(Long userId, NewEventDto dto) {
         log.info("Получен запрос на добавление нового события: {}", dto);
@@ -44,6 +51,9 @@ public class EventServiceImpl implements EventService {
         return EventDtoMapper.toEventFullDto(eventRepository.save(event), statsClient);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<EventShortDto> getEventsByUserId(Long userId, int from, int size) {
         log.info("Получен запрос на получение событий пользователя с id: {}", userId);
@@ -58,6 +68,9 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public EventFullDto getEventByUserIdAndEventId(Long userId, Long eventId) {
         log.info("Получен запрос на получение событий пользователя с userId: {} и eventId: {}", userId, eventId);
@@ -73,6 +86,9 @@ public class EventServiceImpl implements EventService {
                 statsClient);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public EventFullDto updateEventByUser(Long userId, Long eventId, UpdateEventUserRequest dto) {
         log.info("Получен запрос на обновление события с userId: {} и eventId: {}", userId, eventId);
@@ -131,6 +147,9 @@ public class EventServiceImpl implements EventService {
         return EventDtoMapper.toEventFullDto(eventRepository.save(event), statsClient);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public EventFullDto updateEventByAdmin(Long eventId, UpdateEventAdminRequest dto) {
         log.info("Получен запрос на обновление события с eventId: {}", eventId);
@@ -138,7 +157,7 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Событие с таким eventId: " + eventId + " не найдено."));
 
-        DateTimeValidator.ValidateDatetimeOnUpdate(event.getEventDate());
+        DateTimeValidator.validateDateTimeOnUpdate(event.getEventDate());
 
         if (!event.getState().equals(State.PENDING)) {
             throw new StatePublishedException("Событие с eventId: " + eventId +
@@ -191,6 +210,9 @@ public class EventServiceImpl implements EventService {
         return EventDtoMapper.toEventFullDto(eventRepository.save(event), statsClient);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<EventFullDto> getEventsByAdmin(Long[] users, String[] states, Long[] categories,
                                                LocalDateTime rangeStart,
@@ -216,6 +238,9 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public EventFullDto getEventPublic(Long eventId) {
         log.info("Получен запрос на получение события с eventId: {}", eventId);
         Event event = eventRepository.findByIdAndState(eventId, State.PUBLISHED)
@@ -224,6 +249,9 @@ public class EventServiceImpl implements EventService {
         return EventDtoMapper.toEventFullDto(event, statsClient);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<EventShortDto> getEventsPublic(String text, Long[] categories, Boolean paid, LocalDateTime rangeStart,
                                                LocalDateTime rangeEnd, Boolean onlyAvailable, String sortToUpperCase,

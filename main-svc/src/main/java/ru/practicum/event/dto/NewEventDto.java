@@ -2,7 +2,10 @@ package ru.practicum.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Embedded;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.event.model.Location;
@@ -11,6 +14,12 @@ import java.time.LocalDateTime;
 
 import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
+/**
+ * DTO для создания нового события.
+ * Содержит информацию о событии, включая аннотацию, категорию, описание,
+ * дату и время, местоположение, платность, ограничения по участникам и заголовок.
+ * Используется для валидации входящих данных при создании события.
+ */
 @Getter
 @Setter
 public class NewEventDto {

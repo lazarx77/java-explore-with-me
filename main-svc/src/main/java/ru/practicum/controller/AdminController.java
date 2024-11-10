@@ -32,6 +32,10 @@ import java.util.List;
 
 import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
+/**
+ * Контроллер для административных операций в приложении.
+ * Обрабатывает запросы на создание, обновление и удаление пользователей, категорий, событий и подборок.
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/admin")
@@ -45,6 +49,12 @@ public class AdminController {
     private final EventService eventService;
     private final CompilationService compilationService;
 
+    /**
+     * Создает нового пользователя.
+     *
+     * @param dto данные нового пользователя
+     * @return созданный пользователь
+     */
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@RequestBody @Valid NewUserRequestDto dto) {
@@ -52,6 +62,14 @@ public class AdminController {
         return userService.createUser(dto);
     }
 
+    /**
+     * Получает список пользователей с пагинацией.
+     *
+     * @param from индекс для пагинации
+     * @param size количество пользователей для выборки
+     * @param ids  массив идентификаторов пользователей (необязательно)
+     * @return список пользователей
+     */
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     public List<UserDto> getUsers(@RequestParam(defaultValue = "0") @PositiveOrZero int from,
@@ -61,6 +79,11 @@ public class AdminController {
         return userService.getUsers(from, size, ids);
     }
 
+    /**
+     * Удаляет пользователя по идентификатору.
+     *
+     * @param userId идентификатор пользователя
+     */
     @DeleteMapping("users/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable @Positive(message = "id пользователя должен быть положительным") Long userId) {
@@ -68,6 +91,12 @@ public class AdminController {
         userService.deleteUser(userId);
     }
 
+    /**
+     * Создает новую категорию.
+     *
+     * @param dto данные новой категории
+     * @return созданная категория
+     */
     @PostMapping("/categories")
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto createCategory(@RequestBody @Valid NewCategoryDto dto) {
@@ -75,6 +104,13 @@ public class AdminController {
         return categoryService.createNewCategory(dto);
     }
 
+    /**
+     * Обновляет существующую категорию.
+     *
+     * @param catId идентификатор категории
+     * @param dto   данные для обновления категории
+     * @return обновленная категория
+     */
     @PatchMapping("/categories/{catId}")
     @ResponseStatus(HttpStatus.OK)
     public CategoryDto updateCategory(@PathVariable @Positive(message = "id категории должен быть положительным")
@@ -86,6 +122,11 @@ public class AdminController {
         return categoryService.updateCategory(catId, dto);
     }
 
+    /**
+     * Удаляет категорию по идентификатору.
+     *
+     * @param catId идентификатор категории
+     */
     @DeleteMapping("/categories/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable @Positive(message = "id категории должен быть положительным") Long catId) {
@@ -93,6 +134,13 @@ public class AdminController {
         categoryService.deleteCategory(catId);
     }
 
+    /**
+     * Обновляет событие администратором.
+     *
+     * @param eventId идентификатор события
+     * @param dto     данные для обновления события
+     * @return обновленное событие
+     */
     @PatchMapping("/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public EventFullDto updateEventByAdmin(@PathVariable
@@ -103,7 +151,7 @@ public class AdminController {
             StringSizeValidator.validateDescription(dto.getDescription());
         }
         if (dto.getEventDate() != null) {
-            DateTimeValidator.ValidateDatetime(dto.getEventDate());
+            DateTimeValidator.validateDateTime(dto.getEventDate());
         }
         if (dto.getAnnotation() != null) {
             StringSizeValidator.validateAnnotation(dto.getAnnotation());
@@ -117,6 +165,18 @@ public class AdminController {
         return eventService.updateEventByAdmin(eventId, dto);
     }
 
+    /**
+     * Получает список событий с возможностью фильтрации и пагинации.
+     *
+     * @param users      массив идентификаторов пользователей (необязательно)
+     * @param states     массив состояний событий (необязательно)
+     * @param categories массив идентификаторов категорий (необязательно)
+     * @param rangeStart начало диапазона дат (необязательно)
+     * @param rangeEnd   конец диапазона дат (необязательно)
+     * @param from       индекс для пагинации
+     * @param size       количество событий
+     * @return список событий
+     */
     @GetMapping("/events")
     @ResponseStatus(HttpStatus.OK)
     public List<EventFullDto> getEventsByAdmin(@RequestParam(required = false) Long[] users,
@@ -132,6 +192,12 @@ public class AdminController {
         return eventService.getEventsByAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 
+    /**
+     * Создает новую подборку событий.
+     *
+     * @param dto данные для новой подборки
+     * @return созданная подборка
+     */
     @PostMapping("/compilations")
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationDtoResponse createCompilation(@RequestBody @Valid NewCompilationDto dto) {
@@ -145,6 +211,13 @@ public class AdminController {
         return compilationService.createCompilation(dto);
     }
 
+    /**
+     * Обновляет существующую подборку событий.
+     *
+     * @param compId идентификатор подборки
+     * @param dto    данные для обновления подборки
+     * @return обновленная подборка
+     */
     @PatchMapping("/compilations/{compId}")
     @ResponseStatus(HttpStatus.OK)
     public CompilationDtoResponse updateCompilation(@PathVariable
@@ -158,6 +231,11 @@ public class AdminController {
         return compilationService.updateCompilation(compId, dto);
     }
 
+    /**
+     * Удаляет подборку по идентификатору.
+     *
+     * @param compId идентификатор подборки
+     */
     @DeleteMapping("/compilations/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCompilation(@PathVariable

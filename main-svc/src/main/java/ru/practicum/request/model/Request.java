@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 
 import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
+/**
+ * Модель запроса на участие в событии.
+ */
 @Entity
 @Getter
 @Setter

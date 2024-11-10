@@ -39,15 +39,12 @@ class ErrorHandlerTest {
 
     @Test
     void handleTypeMismatchException() {
-        // Подготовка данных для теста
         MethodArgumentTypeMismatchException exception = mock(MethodArgumentTypeMismatchException.class);
         when(exception.getName()).thenReturn("paramName");
         when(exception.getRequiredType()).thenReturn((Class) String.class);
 
-        // Вызов метода обработчика
         ErrorResponse response = errorHandler.handleTypeMismatchException(exception);
 
-        // Проверка результатов
         assertEquals("400 BAD_REQUEST", response.getStatus());
         assertEquals("Ошибка преобразования параметра.", response.getMessage());
         assertEquals("Пожалуйста, проверьте формат передаваемых данных.", response.getReason());

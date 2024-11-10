@@ -10,6 +10,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Класс, представляющий местоположение события.
+ * Содержит широту и долготу, которые определяют географическую позицию.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

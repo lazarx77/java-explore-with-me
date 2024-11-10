@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * DTO для результата обновления статуса запросов на участие в событии.
+ */
 @Getter
 @Setter
 @Builder

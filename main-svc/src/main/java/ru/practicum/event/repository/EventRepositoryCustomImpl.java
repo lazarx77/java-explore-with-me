@@ -10,12 +10,19 @@ import ru.practicum.event.model.State;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Реализация пользовательского репозитория для работы с событиями.
+ * Содержит методы для получения событий с учетом различных фильтров.
+ */
 @Repository
 public class EventRepositoryCustomImpl implements EventRepositoryCustom {
 
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Event> getEvents(List<Long> userList,
                                  List<String> stateList,
@@ -67,6 +74,10 @@ public class EventRepositoryCustomImpl implements EventRepositoryCustom {
         return query.getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<Event> getEventsPublic(String text, List<Long> categoryIds, Boolean paid, LocalDateTime rangeStart,
                                        LocalDateTime rangeEnd, Boolean onlyAvailable, int from, int size) {
         StringBuilder queryString = new StringBuilder("SELECT e FROM Event e WHERE e.state = :state");

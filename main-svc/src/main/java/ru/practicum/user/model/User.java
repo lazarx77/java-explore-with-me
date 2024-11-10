@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 
-import java.util.Objects;
-
+/**
+ * Модель пользователя.
+ * Содержит информацию о пользователе, включая его идентификатор, имя и адрес электронной почты.
+ */
 @Entity
 @Table(name = "users")
 @AllArgsConstructor

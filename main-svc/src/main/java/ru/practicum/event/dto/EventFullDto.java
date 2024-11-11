@@ -22,7 +22,6 @@ import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 @Builder
 public class EventFullDto {
 
-
     private String annotation;
     private Category category;
     private Long confirmedRequests;

@@ -18,17 +18,17 @@ import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 @Setter
 public class UpdateEventAdminRequest {
 
-    String annotation;
-    Long category;
-    String description;
+    private String annotation;
+    private Long category;
+    private String description;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMAT)
-    LocalDateTime eventDate;
+    private LocalDateTime eventDate;
     @Embedded
-    Location location;
-    Boolean paid;
-    Integer participantLimit;
-    Boolean requestModeration;
-    String stateAction;
-    String title;
+    private Location location;
+    private Boolean paid;
+    private Integer participantLimit;
+    private Boolean requestModeration;
+    private String stateAction;
+    private String title;
 }
 

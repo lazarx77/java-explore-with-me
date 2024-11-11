@@ -72,6 +72,6 @@ public class StatsClient extends BaseClient {
                 "uris", urisParam,
                 "unique", unique
         );
-        return get("/stats?start={start}&end={end}&uris={uris}&unique=unique", parameters);
+        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
     }
 }

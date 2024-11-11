@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.stats_client.client.StatsClient;
 
 import static org.mockito.Mockito.verify;
+import static ru.practicum.util.Utils.APP_NAME;
 
 /**
  * Тестовый класс для {@link TestController}.
@@ -24,8 +25,6 @@ class TestControllerTest {
 
     @Mock
     private HttpServletRequest request;
-
-    private static final String APP_NAME = "ewm-main-service";
 
     @Test
     void saveHitTest_whenInvoked_thenStatsClientAddStatsCalled() {

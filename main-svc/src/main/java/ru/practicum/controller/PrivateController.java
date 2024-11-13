@@ -8,10 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.event.dto.EventFullDto;
-import ru.practicum.event.dto.EventShortDto;
-import ru.practicum.event.dto.NewEventDto;
-import ru.practicum.event.dto.UpdateEventUserRequest;
+import ru.practicum.event.dto.admin_comment.PrivateEventFullDto;
+import ru.practicum.event.dto.event.EventFullDto;
+import ru.practicum.event.dto.event.EventShortDto;
+import ru.practicum.event.dto.event.NewEventDto;
+import ru.practicum.event.dto.event.UpdateEventUserRequest;
 import ru.practicum.event.service.EventService;
 import ru.practicum.request.dto.EventRequestStatusUpdateRequestDto;
 import ru.practicum.request.dto.EventRequestStatusUpdateResultDto;
@@ -82,10 +83,10 @@ public class PrivateController {
      */
     @GetMapping("/{userId}/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
-    public EventFullDto getEventByUserIdAndEventId(@PathVariable @Positive(message = "id пользователя должен быть " +
+    public PrivateEventFullDto getEventByUserIdAndEventId(@PathVariable @Positive(message = "id пользователя должен быть " +
             "положительным") Long userId,
-                                                   @PathVariable @Positive(message = "id события должен быть " +
-                                                           "положительным") Long eventId) {
+                                                          @PathVariable @Positive(message = "id события должен быть " +
+                                                                  "положительным") Long eventId) {
         log.info("Получение события с id {} пользователя с id {}", eventId, userId);
         return eventService.getEventByUserIdAndEventId(userId, eventId);
     }

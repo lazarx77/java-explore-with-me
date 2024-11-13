@@ -1,4 +1,4 @@
-package ru.practicum.event.dto;
+package ru.practicum.event.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Embedded;
@@ -8,7 +8,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.event.model.Location;
+import ru.practicum.event.model.event.Location;
 
 import java.time.LocalDateTime;
 
@@ -44,4 +44,5 @@ public class NewEventDto {
     @NotBlank(message = "Поле title не может быть пустым")
     @Size(min = 3, max = 120)
     private String title;
+
 }

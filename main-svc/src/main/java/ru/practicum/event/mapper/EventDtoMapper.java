@@ -6,11 +6,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import ru.practicum.category.mapper.CategoryDtoMapper;
 import ru.practicum.category.repository.CategoryRepository;
-import ru.practicum.event.dto.EventFullDto;
-import ru.practicum.event.dto.EventShortDto;
-import ru.practicum.event.dto.NewEventDto;
-import ru.practicum.event.model.Event;
-import ru.practicum.event.model.State;
+import ru.practicum.event.dto.admin_comment.AdminCommentResponse;
+import ru.practicum.event.dto.admin_comment.PrivateEventFullDto;
+import ru.practicum.event.dto.event.EventFullDto;
+import ru.practicum.event.dto.event.EventShortDto;
+import ru.practicum.event.dto.event.NewEventDto;
+import ru.practicum.event.model.admin_comment.AdminComment;
+import ru.practicum.event.model.event.Event;
+import ru.practicum.event.model.event.State;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.stats_client.client.StatsClient;
 import ru.practicum.user.mapper.UserDtoMapper;
@@ -78,7 +81,7 @@ public class EventDtoMapper {
                 .requestModeration(event.getRequestModeration())
                 .state(event.getState())
                 .title(event.getTitle())
-                .views(getViews(statsClient, event))
+                .views(getViews(statsClient, event.getId()))
                 .build();
     }
 
@@ -100,12 +103,33 @@ public class EventDtoMapper {
                 .initiator(UserDtoMapper.toUserShortDto(event.getInitiator()))
                 .paid(event.getPaid())
                 .title(event.getTitle())
-                .views(getViews(statsClient, event))
+                .views(getViews(statsClient, event.getId()))
                 .build();
     }
 
-    private static long getViews(StatsClient statsClient, Event event) {
-        String[] uris = {"/events/" + event.getId()};
+    public static PrivateEventFullDto toPrivateEventFullDtoWithViews(Event event, StatsClient statsClient,
+                                                                     List<AdminComment> ac) {
+        List<AdminCommentResponse> shortAdminComment = ac.stream()
+                .map(AdminCommentDtoMapper::toAdminCommentResponse)
+                .toList();
+
+        return PrivateEventFullDto.builder()
+                .id(event.getId())
+                .annotation(event.getAnnotation())
+                .category(event.getCategory())
+                .confirmedRequests(event.getConfirmedRequests())
+                .eventDate(event.getEventDate())
+                .initiator(UserDtoMapper.toUserShortDto(event.getInitiator()))
+                .paid(event.getPaid())
+                .title(event.getTitle())
+                .state(event.getState())
+                .views(getViews(statsClient, event.getId()))
+                .adminComments(shortAdminComment)
+                .build();
+    }
+
+    private static long getViews(StatsClient statsClient, Long eventId) {
+        String[] uris = {"/events/" + eventId};
         ResponseEntity<Object> response = statsClient.getStats(LocalDateTime.now().minusYears(30).format(formatter),
                 LocalDateTime.now().format(formatter), uris, true);
 

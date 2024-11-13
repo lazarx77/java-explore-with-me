@@ -1,4 +1,4 @@
-package ru.practicum.event.model;
+package ru.practicum.event.model.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;

@@ -3,8 +3,8 @@ package ru.practicum.event.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.practicum.event.model.Event;
-import ru.practicum.event.model.State;
+import ru.practicum.event.model.event.Event;
+import ru.practicum.event.model.event.State;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +25,8 @@ public interface EventRepository extends JpaRepository<Event, Long>, EventReposi
      */
     @Query(value = "SELECT * FROM events WHERE initiator_id = :userId ORDER BY created_on DESC LIMIT :limit " +
             "OFFSET :offset", nativeQuery = true)
-    List<Event> findAllByInitiatorId(@Param("userId") Long userId, @Param("offset") int offset, @Param("limit") int limit);
+    List<Event> findAllByInitiatorId(@Param("userId") Long userId, @Param("offset") int offset,
+                                     @Param("limit") int limit);
 
     /**
      * Находит событие по идентификатору инициатора и идентификатору события.
@@ -61,4 +62,8 @@ public interface EventRepository extends JpaRepository<Event, Long>, EventReposi
      * @return список событий.
      */
     List<Event> findAllByCategoryId(Long catId);
+
+    @Query("SELECT e FROM Event e JOIN e.category c JOIN e.initiator u WHERE e.state = 'PENDING' " +
+            "ORDER BY e.createdOn ASC")
+    List<Event> getPendingEvents();
 }

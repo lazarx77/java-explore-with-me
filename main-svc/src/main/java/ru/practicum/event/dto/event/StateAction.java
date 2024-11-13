@@ -1,4 +1,4 @@
-package ru.practicum.event.dto;
+package ru.practicum.event.dto.event;
 
 import java.util.Optional;
 import java.util.stream.Stream;

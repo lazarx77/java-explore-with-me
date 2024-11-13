@@ -4,10 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.category.repository.CategoryRepository;
-import ru.practicum.event.dto.*;
+import ru.practicum.event.dto.admin_comment.PrivateEventFullDto;
+import ru.practicum.event.dto.event.*;
+import ru.practicum.event.mapper.AdminCommentDtoMapper;
 import ru.practicum.event.mapper.EventDtoMapper;
-import ru.practicum.event.model.Event;
-import ru.practicum.event.model.State;
+import ru.practicum.event.model.admin_comment.AdminComment;
+import ru.practicum.event.model.event.Event;
+import ru.practicum.event.model.event.State;
+import ru.practicum.event.repository.AdminCommentRepository;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.exception.StateActionException;
@@ -36,6 +40,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final StatsClient statsClient;
+    private final AdminCommentRepository adminCommentRepository;
 
     /**
      * {@inheritDoc}
@@ -72,7 +77,7 @@ public class EventServiceImpl implements EventService {
      * {@inheritDoc}
      */
     @Override
-    public EventFullDto getEventByUserIdAndEventId(Long userId, Long eventId) {
+    public PrivateEventFullDto getEventByUserIdAndEventId(Long userId, Long eventId) {
         log.info("Получен запрос на получение событий пользователя с userId: {} и eventId: {}", userId, eventId);
         log.info("Проверка на существование пользователя с id: " + userId);
 
@@ -80,10 +85,10 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException("Пользователь с таким id: " + userId + " не найден."));
 
         log.info("Проверка на существование события с eventId: {} у пользователя с userId: {}", eventId, userId);
-        return EventDtoMapper.toEventFullDto(eventRepository.findByInitiatorIdAndId(userId, eventId)
+        return EventDtoMapper.toPrivateEventFullDtoWithViews(eventRepository.findByInitiatorIdAndId(userId, eventId)
                         .orElseThrow(() -> new NotFoundException("Событие с таким eventId: " + eventId +
                                 " у пользователя с userId: " + userId + " не найдено.")),
-                statsClient);
+                statsClient, adminCommentRepository.findCommentsByEventId(eventId));
     }
 
     /**
@@ -176,6 +181,11 @@ public class EventServiceImpl implements EventService {
                 event.setState(State.PUBLISHED);
             } else if (stateAction.equals(StateAction.REJECT_EVENT)) {
                 event.setState(State.CANCELED);
+                if (dto.getAdminComment() != null) {
+                    AdminComment adminComment = AdminCommentDtoMapper.toAdminComment(dto.getAdminComment());
+                    adminComment.setEvent(event);
+                    adminCommentRepository.save(adminComment);
+                }
             }
         }
 
@@ -276,5 +286,19 @@ public class EventServiceImpl implements EventService {
         }
 
         return eventsDtoList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PrivateEventFullDto> getPendingEventsByAdmin() {
+        log.info("Вызывается метод getPendingEventsByAdmin в сервисе EventServiceImpl");
+
+        return eventRepository.getPendingEvents()
+                .stream()
+                .map(event -> EventDtoMapper.toPrivateEventFullDtoWithViews(event, statsClient, adminCommentRepository
+                        .findCommentsByEventId(event.getId())))
+                .collect(Collectors.toList());
     }
 }

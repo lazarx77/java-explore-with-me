@@ -1,4 +1,4 @@
-package ru.practicum.event.model;
+package ru.practicum.event.model.event;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

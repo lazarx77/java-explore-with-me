@@ -8,7 +8,7 @@ import ru.practicum.category.dto.NewCategoryDto;
 import ru.practicum.category.mapper.CategoryDtoMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
-import ru.practicum.event.model.Event;
+import ru.practicum.event.model.event.Event;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.CategoryContainsEvents;
 import ru.practicum.exception.CategoryNameDoubleException;

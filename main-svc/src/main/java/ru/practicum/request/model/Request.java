@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import ru.practicum.event.model.Event;
+import ru.practicum.event.model.event.Event;
 import ru.practicum.user.model.User;
 
 import java.time.LocalDateTime;

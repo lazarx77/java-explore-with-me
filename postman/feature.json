@@ -1,0 +1,564 @@
+{
+	"info": {
+		"_postman_id": "ca379f20-5699-4beb-b95f-e64e300aa52e",
+		"name": "Explore with me - feature - moderation enhancement",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36573758"
+	},
+	"item": [
+		{
+			"name": "Добавление тестового пользователя",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.have.status(201);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"}); \r",
+							"\r",
+							"pm.test(\"Каждый объект должен содержать поле 'id'\", function() {\r",
+							"    pm.expect(body).to.have.property('id');\r",
+							"    pm.collectionVariables.set(\"lastUserId\", body.id);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Поле name должно быть - 'Тестовое Имя'\", function() {\r",
+							"    pm.expect(body.name).to.equal('Тестовое Имя');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Поле email должно быть - 'test-email@mail.com'\", function() {\r",
+							"    pm.expect(body.email).to.equal('test-email@mail.com');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Тестовое Имя\",\r\n  \"email\": \"test-email@mail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/admin/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавление тестовой категории",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.have.status(201);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"}); \r",
+							"\r",
+							"pm.test(\"Каждый объект должен содержать поле 'id'\", function() {\r",
+							"    pm.expect(body).to.have.property('id');\r",
+							"    pm.collectionVariables.set(\"lastCategoryId\", body.id);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Поле name должно быть - 'Тестовая категория'\", function() {\r",
+							"    pm.expect(body.name).to.equal('Тестовая категория');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Тестовая категория\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/admin/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавление тестового события",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.have.status(201);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"}); \r",
+							"\r",
+							"pm.test(\"Каждый объект должен содержать поле 'id'\", function() {\r",
+							"    pm.expect(body).to.have.property('id');\r",
+							"    pm.collectionVariables.set(\"lastEventId\", body.id);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Поле title должно быть - 'Тестовое Событие'\", function() {\r",
+							"    pm.expect(body.title).to.equal('Тестовое Событие');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"annotation\": \"Тестовое событие для демонстрации функционала\",\r\n  \"category\": {{lastCategoryId}},\r\n  \"description\": \"Это подробное описание тестового события, которое демонстрирует все необходимые поля.\",\r\n  \"eventDate\": \"2025-12-31 18:00:00\",\r\n  \"location\": {\r\n    \"lat\": 55.7558,\r\n    \"lon\": 37.6173\r\n  },\r\n  \"paid\": false,\r\n  \"participantLimit\": 100,\r\n  \"requestModeration\": true,\r\n  \"title\": \"Тестовое Событие\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users/{{lastUserId}}/events",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"{{lastUserId}}",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Выборка всех событий ожидающих публикацию",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json и быть массивом\", function() {\r",
+							"    pm.response.to.be.ok;\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"    pm.expect(body).is.an('array');\r",
+							"}); \r",
+							"\r",
+							"pm.test(\"Каждый объект должен содержать поле 'adminComments'\", function() {\r",
+							"    body.forEach(item => {\r",
+							"        pm.expect(item).to.have.property('adminComments');\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/admin/events/pending",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"events",
+						"pending"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Отклонение события администратором с комментарием",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"}); \r",
+							"\r",
+							"pm.test(\"Поле title должно быть - 'Тестовое Событие'\", function() {\r",
+							"    pm.expect(body.title).to.equal('Тестовое Событие');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Поле state должно быть - 'CANCELED\", function() {\r",
+							"    pm.expect(body.state).to.equal('CANCELED');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"stateAction\": \"REJECT_EVENT\",\r\n  \"adminComment\": \"Комментарий администратора об отклонении события\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/admin/events/{{lastEventId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"events",
+						"{{lastEventId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получение подробной информации об отклоненном событии инициатором",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"}); \r",
+							"\r",
+							"pm.test(\"Поле title должно быть - 'Тестовое Событие'\", function() {\r",
+							"    pm.expect(body.title).to.equal('Тестовое Событие');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Поле text в adminComment должно быть - 'Комментарий администратора об отклонении события'\", function() {\r",
+							"    pm.expect(body.adminComments[0].text).to.equal('Комментарий администратора об отклонении события');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Поле state должно быть - 'CANCELED\", function() {\r",
+							"    pm.expect(body.state).to.equal('CANCELED');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/{{lastUserId}}/events/{{lastEventId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"{{lastUserId}}",
+						"events",
+						"{{lastEventId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получение отклоненного события по публичному эндпоинту",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать код статуса 404\", function() {\r",
+							"    pm.response.to.have.status(404);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"}); \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/events/{{lastEventId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"events",
+						"{{lastEventId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Обновление отклоненного события инициатором",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"}); \r",
+							"\r",
+							"pm.test(\"Поле title должно быть - 'Обновленное название события'\", function() {\r",
+							"    pm.expect(body.title).to.equal('Обновленное название события');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Поле state должно быть - 'PENDING\", function() {\r",
+							"    pm.expect(body.state).to.equal('PENDING');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"annotation\": \"Обновленная аннотация события\",\r\n    \"category\": 1,\r\n    \"description\": \"Обновленное описание события\",\r\n    \"eventDate\": \"2025-12-31 18:00:00\",\r\n    \"location\": {\r\n        \"lat\": 55.7558,\r\n        \"lon\": 37.6173\r\n    },\r\n    \"paid\": true,\r\n    \"participantLimit\": 100,\r\n    \"requestModeration\": false,\r\n    \"stateAction\": \"SEND_TO_REVIEW\",\r\n    \"title\": \"Обновленное название события\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users/{{lastUserId}}/events/{{lastEventId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"{{lastUserId}}",
+						"events",
+						"{{lastEventId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Публикация обновленного события администратором",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"}); \r",
+							"\r",
+							"pm.test(\"Поле title должно быть - 'Обновленное название события'\", function() {\r",
+							"    pm.expect(body.title).to.equal('Обновленное название события');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Поле state должно быть - 'PUBLISHED\", function() {\r",
+							"    pm.expect(body.state).to.equal('PUBLISHED');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"stateAction\": \"PUBLISH_EVENT\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/admin/events/{{lastEventId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"events",
+						"{{lastEventId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получение подробной информации о событии по публичному эндпоинту",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"}); \r",
+							"\r",
+							"pm.test(\"Поле title должно быть - 'Обновленное название события'\", function() {\r",
+							"    pm.expect(body.title).to.equal('Обновленное название события');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Поле state должно быть - 'PUBLISHED\", function() {\r",
+							"    pm.expect(body.state).to.equal('PUBLISHED');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Поле adminComments должно отсутствовать\", function() {\r",
+							"    pm.expect(body.adminComments).to.not.exist;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/events/{{lastEventId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"events",
+						"{{lastEventId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "lastUserId",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "lastCategoryId",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "lastEventId",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

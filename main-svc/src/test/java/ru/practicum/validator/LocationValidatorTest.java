@@ -1,7 +1,7 @@
 package ru.practicum.validator;
 
 import org.junit.jupiter.api.Test;
-import ru.practicum.event.model.Location;
+import ru.practicum.event.model.event.Location;
 import ru.practicum.exception.LocationConstraintsException;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

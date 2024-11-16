@@ -1,7 +1,7 @@
 package ru.practicum.validator;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.event.model.Location;
+import ru.practicum.event.model.event.Location;
 import ru.practicum.exception.LocationConstraintsException;
 
 

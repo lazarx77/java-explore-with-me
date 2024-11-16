@@ -4,8 +4,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
-import ru.practicum.event.model.Event;
-import ru.practicum.event.model.State;
+import ru.practicum.event.model.event.Event;
+import ru.practicum.event.model.event.State;
 
 import java.time.LocalDateTime;
 import java.util.List;

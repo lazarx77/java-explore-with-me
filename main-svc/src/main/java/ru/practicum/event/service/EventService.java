@@ -1,7 +1,8 @@
 package ru.practicum.event.service;
 
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.event.dto.*;
+import ru.practicum.event.dto.admin_comment.PrivateEventFullDto;
+import ru.practicum.event.dto.event.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,7 +41,7 @@ public interface EventService {
      * @param eventId идентификатор события.
      * @return EventFullDto - полная информация о событии.
      */
-    EventFullDto getEventByUserIdAndEventId(Long userId, Long eventId);
+    PrivateEventFullDto getEventByUserIdAndEventId(Long userId, Long eventId);
 
     /**
      * Обновляет событие пользователем.
@@ -75,8 +76,8 @@ public interface EventService {
      * @param size       лимит количества возвращаемых событий.
      * @return список полной информации о событиях.
      */
-    List<EventFullDto> getEventsByAdmin(Long[] users, String[] states, Long[] categories, LocalDateTime rangeStart,
-                                        LocalDateTime rangeEnd, int from, int size);
+    List<EventFullDto> getEventsByAdmin(Long[] users, String[] states, Long[] categories,
+                                               LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size);
 
     /**
      * Получает публичное событие по идентификатору.
@@ -103,4 +104,12 @@ public interface EventService {
     List<EventShortDto> getEventsPublic(String text, Long[] categories, Boolean paid, LocalDateTime rangeStart,
                                         LocalDateTime rangeEnd, Boolean onlyAvailable, String sortToUpperCase,
                                         int from, int size);
+
+    /**
+     * Получает список ожидающих событий для администраторов.
+     *
+     * @return список объектов {@link PrivateEventFullDto}, представляющих
+     *         ожидающие события. Возвращает пустой список, если таких событий нет.
+     */
+    List<PrivateEventFullDto> getPendingEventsByAdmin();
 }

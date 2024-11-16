@@ -16,8 +16,9 @@ import ru.practicum.compilation.dto.CompilationDtoResponse;
 import ru.practicum.compilation.dto.NewCompilationDto;
 import ru.practicum.compilation.dto.UpdateCompilationRequestDto;
 import ru.practicum.compilation.service.CompilationService;
-import ru.practicum.event.dto.EventFullDto;
-import ru.practicum.event.dto.UpdateEventAdminRequest;
+import ru.practicum.event.dto.admin_comment.PrivateEventFullDto;
+import ru.practicum.event.dto.event.EventFullDto;
+import ru.practicum.event.dto.event.UpdateEventAdminRequest;
 import ru.practicum.event.service.EventService;
 import ru.practicum.user.dto.NewUserRequestDto;
 import ru.practicum.user.dto.UserDto;
@@ -162,6 +163,9 @@ public class AdminController {
         if (dto.getLocation() != null) {
             LocationValidator.validateLocation(dto.getLocation());
         }
+        if (dto.getAdminComment() != null) {
+            StringSizeValidator.validateComment(dto.getAdminComment());
+        }
         return eventService.updateEventByAdmin(eventId, dto);
     }
 
@@ -243,5 +247,17 @@ public class AdminController {
                                   Long compId) {
         log.info("Вызывается метод deleteCompilation в AdminController");
         compilationService.deleteCompilation(compId);
+    }
+
+    /**
+     * Получает список ожидающих публикации событий.
+     *
+     * @return Список объектов {@link PrivateEventFullDto} с ожидающими событиями.
+     */
+    @GetMapping("events/pending")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PrivateEventFullDto> getPendingEvents() {
+        log.info("Вызывается метод getPendingEvents в AdminController");
+        return eventService.getPendingEventsByAdmin();
     }
 }

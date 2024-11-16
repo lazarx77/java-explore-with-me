@@ -1,22 +1,22 @@
-package ru.practicum.event.dto;
+package ru.practicum.event.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Embedded;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.event.model.Location;
+import ru.practicum.event.model.event.Location;
 
 import java.time.LocalDateTime;
 
 import static ru.practicum.util.Utils.DATE_TIME_FORMAT;
 
 /**
- * Запрос на обновление события от администратора.
- * Содержит информацию о полях, которые могут быть изменены при редактировании события.
+ * Запрос на обновление события от пользователя.
+ * Содержит информацию о полях, которые могут быть изменены при редактировании события пользователем.
  */
 @Getter
 @Setter
-public class UpdateEventAdminRequest {
+public class UpdateEventUserRequest {
 
     private String annotation;
     private Long category;
@@ -30,5 +30,5 @@ public class UpdateEventAdminRequest {
     private Boolean requestModeration;
     private String stateAction;
     private String title;
-}
 
+}
